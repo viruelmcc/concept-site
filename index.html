@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KVRMCT64');</script>
+<!-- End Google Tag Manager -->
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '544750160682227');
+fbq('track', 'PageView');
+</script>
+<noscript><img loading="lazy" decoding="async" height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=544750160682227&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAOASURBVHja7JdLaJRXFMd/3zfJTN4xGQn4iJmMmbxMFcVU1NhFQNRgXSRqlJbWTWyxlUK7aAURLYg1rl25EMWoxaVRVBpFQakvdFQU0Vj60viINlaTiDHXheeT4+XT+YgWF82B4c6c+7/nnHvueY1jjOF9kst7pmEDnAD7i4A6YAJQCmQBPUAnkAQ6gF/+C+O+B34DTIDPaWAJEHkXHqgGdgETFe8qcA74HegHcoDxwDRglMKtB1a/za1nAU/VzQ4A896ADwOfAbeBATF+yFRhuXW5DyYTKADSLP4IIOaDzwaKJG5Skn7v2dYtvwaOA/flCbrEO0uBqI+sFYJ/IJ65DxwDWl6n/Ael/AvFnwbcSBGAK634uZgCn7SfypVbGeCE4k+0DnaIsk+BVcAfwAUgX/AlQK/CHwaa8tzQFKBJfnt7vUCxp6hJbXwkvBBwU/EbfbyWZqVdUuGXNucXsqs4zt6SsmhbcZzm/EKAzxXmsndwmzD+VsKWa2EB4meuwn+5MlpEV9WkTecT1eZYvNIkE9XmdtWk1hXRIsSLHnYO4nYD7FEC24V3NWAGtXmXmJyRxfXymmUdpeWmPZYw+2MJ0x5LmCOlFeZKeU3jBxmZSNoaYLsLjFbFxqNyWfcHNCAh66FZ2bmA822fMS8bjQs8Ns+IOM6PH2bmoEp3iasa0jOfJjUY0ICQrH04MIAZtLuceVF2B1znVbkucEu+lyn8dVnnBDTA89jDO08HGJ2WvsVRWgaBPDfEE2NWn+p9DFAvW3+6StlMJfCgrBNSlGKADdIbAPad7HvEjn+6N8fDkTWx9PCTEaEQpenh/rJwxtqf7na1J/t7W9Sz70Ty2ovKWtnwWq6R3lD/GuU6W44qfmFjXgFbx8bYM2581taxMebn5gMsVnjv4kTES8bq63VWIfoZ+ARoEMW6sPQAI9XZB1KK50ccpwb4WGWWkXgrs93obTZb+d0doLTG1ZnWFPhOYKrfXHBXgTQgCqwDrihP9QNngK8sObrSPQIeKvw54Dtpbr5Ua7looQ9mlAwiI332Vqnz94AxQK70iIKgM8ECy11tfu6yqEFarXemW4zEGJPy4zeSzQB2624F/AqcBa4B/8qzVADTrdZ6XGbDvzwDhkoZwEaJ5iBDaSfwjS1kqB6wR63FkpKVUkAiEmA3gUvAEfEYfgaknIqH/xv+7w14PgCszXpEqgZZaAAAAABJRU5ErkJggg=="><link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAOASURBVHja7JdLaJRXFMd/3zfJTN4xGQn4iJmMmbxMFcVU1NhFQNRgXSRqlJbWTWyxlUK7aAURLYg1rl25EMWoxaVRVBpFQakvdFQU0Vj60viINlaTiDHXheeT4+XT+YgWF82B4c6c+7/nnHvueY1jjOF9kst7pmEDnAD7i4A6YAJQCmQBPUAnkAQ6gF/+C+O+B34DTIDPaWAJEHkXHqgGdgETFe8qcA74HegHcoDxwDRglMKtB1a/za1nAU/VzQ4A896ADwOfAbeBATF+yFRhuXW5DyYTKADSLP4IIOaDzwaKJG5Skn7v2dYtvwaOA/flCbrEO0uBqI+sFYJ/IJ65DxwDWl6n/Ael/AvFnwbcSBGAK634uZgCn7SfypVbGeCE4k+0DnaIsk+BVcAfwAUgX/AlQK/CHwaa8tzQFKBJfnt7vUCxp6hJbXwkvBBwU/EbfbyWZqVdUuGXNucXsqs4zt6SsmhbcZzm/EKAzxXmsndwmzD+VsKWa2EB4meuwn+5MlpEV9WkTecT1eZYvNIkE9XmdtWk1hXRIsSLHnYO4nYD7FEC24V3NWAGtXmXmJyRxfXymmUdpeWmPZYw+2MJ0x5LmCOlFeZKeU3jBxmZSNoaYLsLjFbFxqNyWfcHNCAh66FZ2bmA822fMS8bjQs8Ns+IOM6PH2bmoEp3iasa0jOfJjUY0ICQrH04MIAZtLuceVF2B1znVbkucEu+lyn8dVnnBDTA89jDO08HGJ2WvsVRWgaBPDfEE2NWn+p9DFAvW3+6StlMJfCgrBNSlGKADdIbAPad7HvEjn+6N8fDkTWx9PCTEaEQpenh/rJwxtqf7na1J/t7W9Sz70Ty2ovKWtnwWq6R3lD/GuU6W44qfmFjXgFbx8bYM2581taxMebn5gMsVnjv4kTES8bq63VWIfoZ+ARoEMW6sPQAI9XZB1KK50ccpwb4WGWWkXgrs93obTZb+d0doLTG1ZnWFPhOYKrfXHBXgTQgCqwDrihP9QNngK8sObrSPQIeKvw54Dtpbr5Ua7looQ9mlAwiI332Vqnz94AxQK70iIKgM8ECy11tfu6yqEFarXemW4zEGJPy4zeSzQB2624F/AqcBa4B/8qzVADTrdZ6XGbDvzwDhkoZwEaJ5iBDaSfwjS1kqB6wR63FkpKVUkAiEmA3gUvAEfEYfgaknIqH/xv+7w14PgCszXpEqgZZaAAAAABJRU5ErkJggg==">
+<link rel="canonical" href="https://www.locadoraconcept.com.br/">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Concept Locadora">
+<meta property="og:url" content="https://www.locadoraconcept.com.br/">
+<meta property="og:title" content="1ª Semana Grátis pra Rodar de App em Curitiba | Concept">
+<meta property="og:description" content="Comece a rodar de app com a 1ª semana grátis. Sem cartão, sem burocracia, pagamento semanal. Concept Locadora, Curitiba.">
+<meta property="og:image" content="https://www.locadoraconcept.com.br/og-cover.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="1ª Semana Grátis pra Rodar de App em Curitiba | Concept">
+<meta name="twitter:description" content="1ª semana grátis pra rodar de app. Sem cartão, sem burocracia, pagamento semanal.">
+<meta name="twitter:image" content="https://www.locadoraconcept.com.br/og-cover.jpg">
+<title>1ª Semana Grátis pra Rodar de App em Curitiba | Concept Locadora</title>
+<meta name="description" content="Alugue carro pra rodar de Uber e 99 na Concept, em Curitiba. Sem cartão de crédito, sem burocracia, pagamento semanal. Onix LT 2021-2024 com a 1ª semana grátis, depois R$ 850/semana.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--preto:#0F1313;--branco:#fff;--vermelho:#B70103;--c900:#16191a;--c700:#3a3f41;--c500:#6b7173;--c300:#b9bec0;--c100:#eef0f1;--c50:#f7f8f8;--maxw:1080px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{overflow-x:hidden;max-width:100%}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--c900);background:#fff;line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,.display{font-family:'Anton',Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.5px;line-height:1.0}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  .eyebrow{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--c500);font-weight:600}
+  .hero .eyebrow,.dark .eyebrow{color:var(--c300)}
+
+  .btn{display:inline-block;background:var(--vermelho);color:#fff;font-weight:700;font-size:15px;padding:15px 26px;border-radius:10px;transition:.15s;border:2px solid var(--vermelho)}
+  .btn:hover{background:#9a0103;border-color:#9a0103}
+  .btn-ghost{display:inline-block;background:transparent;color:#fff;font-weight:600;font-size:15px;padding:15px 26px;border-radius:10px;border:2px solid rgba(255,255,255,.35)}
+  .btn-ghost:hover{border-color:#fff}
+  .btn-dark{background:var(--preto);border-color:var(--preto);color:#fff}
+  .btn-dark:hover{background:#000}
+
+  /* topbar */
+  .top{position:absolute;top:0;left:0;right:0;z-index:60;background:transparent;color:#fff}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .top img{height:46px}
+  .top .tel{font-size:14px;font-weight:600}
+  .top .tel span{color:var(--c300);font-weight:400;margin-right:6px}
+
+  /* hero */
+  .hero{background:linear-gradient(150deg,#1c2122 0%,#0e1112 56%);color:#fff;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;z-index:0}
+  .hero::after{content:"";position:absolute;right:-150px;top:-130px;width:480px;height:480px;background:radial-gradient(circle,rgba(255,255,255,.07),transparent 70%);border-radius:50%;pointer-events:none;z-index:0}
+  .hero .wrap{position:relative;z-index:2;padding:104px 22px 44px;display:grid;gap:34px;grid-template-columns:1fr}
+  .hero h1{font-size:clamp(40px,11vw,70px);color:#fff;margin:16px 0}
+  .hero h1 .red{color:#fff}
+  .hero .sub{font-size:18px;color:var(--c300);max-width:34em;margin-bottom:26px}
+  .hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .hero .modelos{display:flex;gap:8px;flex-wrap:wrap;margin-top:30px}
+  .hero .modelos .m{border:1px solid rgba(255,255,255,.18);border-radius:30px;padding:8px 16px;font-size:14px;font-weight:600}
+  .hero .modelos .m b{color:var(--vermelho)}
+  .carph{background:linear-gradient(160deg,#1c2122,#101314);border:1px solid rgba(255,255,255,.12);border-radius:18px;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--c500);position:relative}
+  .carph .badge{position:absolute;top:14px;left:14px;background:var(--vermelho);color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border-radius:20px}
+  .carph .ph{font-size:13px;color:var(--c500)}
+  .carph .mn{font-family:'Anton';font-size:26px;color:#fff;margin-top:4px}
+
+  /* seções */
+  section{padding:56px 0}
+  .sec-head{text-align:center;max-width:40em;margin:0 auto 34px}
+  .sec-head h2{font-size:clamp(28px,6vw,42px);margin:10px 0 12px}
+  .sec-head p{color:var(--c500);font-size:17px}
+  .dark{background:var(--preto);color:#fff}
+  .dark .sec-head p{color:var(--c300)}
+  .soft{background:var(--c50)}
+
+  /* por que elétrico */
+  .grid4{display:grid;gap:16px;grid-template-columns:1fr}
+  .feat{background:#fff;border:1px solid var(--c100);border-radius:14px;padding:22px}
+  .dark .feat{background:#1a1e1f;border-color:#262b2c}
+  .feat .n{font-family:'Anton';font-size:30px;color:var(--preto);line-height:1}
+  .feat h3{font-family:'Inter';text-transform:none;letter-spacing:0;font-weight:700;font-size:18px;margin:12px 0 6px}
+  .feat p{font-size:15px;color:var(--c500)}
+  .dark .feat p{color:var(--c300)}
+
+  /* modelos */
+  .cards{display:grid;gap:18px;grid-template-columns:1fr}
+  .card{border:1px solid var(--c100);border-radius:18px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+  .card .ph{background:linear-gradient(160deg,#f1f3f3,#e4e7e8);min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;color:#9aa0a2}
+  .card .ph .badge{position:absolute;top:12px;left:12px;background:var(--preto);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:20px}
+  .card .ph .mn{font-family:'Anton';font-size:24px;color:var(--preto)}
+  .card .body{padding:20px 22px;display:flex;flex-direction:column;flex:1}
+  .card .tag{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--c500)}
+  .card h3{font-family:'Inter';text-transform:none;letter-spacing:0;font-weight:700;font-size:20px;margin:4px 0 6px}
+  .card .desc{font-size:14.5px;color:var(--c500);margin-bottom:16px;flex:1}
+  .card .price{border-top:1px solid var(--c100);padding-top:14px;margin-bottom:16px}
+  .card .price .v{font-size:26px;font-weight:700}.card .price .v small{font-size:14px;font-weight:500;color:var(--c500)}
+  .card .price .cau{font-size:13.5px;color:var(--c500);margin-top:2px}
+  .card .btn{text-align:center}
+
+  /* benefícios concept */
+  .bens{display:grid;gap:12px;grid-template-columns:1fr}
+  .ben{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--c100);border-radius:12px;padding:16px 18px}
+  .ben .dot{width:9px;height:9px;border-radius:50%;background:var(--vermelho);margin-top:7px;flex:none}
+  .ben b{display:block;font-size:15.5px}
+  .ben span{font-size:13.5px;color:var(--c500)}
+
+  /* passos */
+  .steps{display:grid;gap:16px;grid-template-columns:1fr;counter-reset:s}
+  .stp{background:#1a1e1f;border:1px solid #262b2c;border-radius:14px;padding:24px 22px}
+  .stp .n{font-family:'Anton';font-size:34px;color:#fff}
+  .stp h3{font-family:'Inter';text-transform:none;letter-spacing:0;font-weight:700;font-size:18px;margin:8px 0 6px;color:#fff}
+  .stp p{font-size:15px;color:var(--c300)}
+
+  /* combustão (discreto) */
+  .comb{max-width:760px;margin:0 auto;text-align:center}
+  .comb-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:18px}
+  .comb table{width:100%;border-collapse:collapse;font-size:15px}
+  @media(max-width:560px){
+    .comb-scroll{overflow:visible}
+    .comb thead{display:none}
+    .comb table,.comb tbody{display:block;width:100%}
+    .comb tr{display:block;background:#fff;border:1px solid #ececec;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.06);margin-bottom:12px;overflow:hidden}
+    .comb td{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:11px 15px;border:0;border-top:1px solid #f1f1f1;text-align:right;font-size:14px}
+    .comb td::before{content:attr(data-label);font-weight:600;color:var(--c500,#6b7280);text-align:left;white-space:nowrap}
+    .comb td.v{font-weight:800;font-size:16px}
+    .comb td[data-label="Categoria"]{background:var(--preto);color:#fff;border-top:0;justify-content:flex-start;font-weight:700;font-size:12.5px;letter-spacing:1px;text-transform:uppercase}
+    .comb td[data-label="Categoria"]::before{display:none}
+  }
+  .comb th{background:var(--preto);color:#fff;padding:10px 12px;text-align:left;font-size:12.5px}
+  .comb th.r,.comb td.r{text-align:right}
+  .comb td{padding:10px 12px;border-bottom:1px solid var(--c100)}
+  .comb tr:nth-child(even){background:var(--c50)}
+  .comb .v{font-weight:700;white-space:nowrap}
+
+  /* faq */
+  .faq{max-width:780px;margin:0 auto;display:grid;gap:10px}
+  .faq details{border:1px solid var(--c100);border-radius:12px;background:#fff;padding:0 18px}
+  .faq summary{list-style:none;cursor:pointer;padding:16px 0;font-weight:600;font-size:16px;display:flex;justify-content:space-between;align-items:center}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--vermelho);font-size:22px;font-weight:700}
+  .faq details[open] summary::after{content:"–"}
+  .faq p{padding:0 0 16px;color:var(--c500);font-size:15px}
+
+  /* cta final */
+  .cta-final{text-align:center}
+  .cta-final h2{font-size:clamp(30px,7vw,48px);color:#fff;margin-bottom:14px}
+  .cta-final p{color:var(--c300);font-size:17px;margin-bottom:24px}
+
+  footer{background:#000;color:#fff;padding:40px 0 44px}
+  footer img{height:50px;margin-bottom:18px}
+  footer .cols{display:grid;gap:20px;grid-template-columns:1fr}
+  footer h4{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--c500);margin-bottom:10px}
+  footer a,footer p{display:block;font-size:14.5px;color:var(--c300);margin-bottom:6px}
+  footer .fine{border-top:1px solid #232728;margin-top:24px;padding-top:18px;font-size:12.5px;color:var(--c500)}
+
+  @media(min-width:760px){
+    .hero .wrap{grid-template-columns:1.1fr .9fr;align-items:center;padding:104px 22px 64px}
+    .carph{min-height:300px}
+    .grid4{grid-template-columns:1fr 1fr}
+    .cards{grid-template-columns:1fr 1fr 1fr}
+    .bens{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:1fr 1fr 1fr}
+    footer .cols{grid-template-columns:2fr 1fr 1fr}
+  }
+
+  .carph{position:relative;overflow:hidden}
+  .carph img,.card .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .carph .badge,.card .ph .badge{z-index:2}
+  /* fotos-css */
+
+  .wa-float{position:fixed;right:18px;bottom:18px;z-index:9999;width:58px;height:58px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,0,0,.28);transition:transform .15s}
+  .wa-float:hover{transform:scale(1.08)}
+  .wa-float svg{width:33px;height:33px;fill:#fff}
+  .wa-float::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(37,211,102,.5);animation:wa-pulse 2.2s infinite}
+  @keyframes wa-pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+  @media(min-width:760px){.wa-float{width:62px;height:62px;right:24px;bottom:24px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}.wa-float::after{display:none}}a:focus-visible,button:focus-visible,summary:focus-visible,.btn:focus-visible,.btn-ghost:focus-visible,.wa-float:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:8px}@media(max-width:480px){.top .tel span{display:none}.top .tel{font-size:13px}}
+  .promo{background:radial-gradient(120% 120% at 82% 0%,#2a1c1c 0%,#0e1112 55%);color:#fff;position:relative;overflow:hidden}
+  .promo::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;z-index:0}
+  .promo .wrap{position:relative;z-index:2}
+  .promo-badge{display:inline-flex;align-items:center;gap:9px;background:var(--vermelho);color:#fff;font-size:12.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:8px 15px;border-radius:30px}
+  .promo-badge .pip{width:8px;height:8px;border-radius:50%;background:#fff;animation:pip 1.2s ease-in-out infinite}
+  @keyframes pip{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.25;transform:scale(.7)}}
+  .promo h2{font-size:clamp(30px,7vw,52px);margin:18px 0 8px;color:#fff}
+  .promo .lead{color:var(--c300);font-size:17px;max-width:36em}
+  .deal{margin-top:30px;display:grid;gap:0;grid-template-columns:1fr;border:1px solid rgba(255,255,255,.14);border-radius:20px;overflow:hidden;background:#14181a;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+  .deal .ph{min-height:230px;background:linear-gradient(160deg,#1c2122,#101314);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;color:var(--c500)}
+  .deal .ph .mn{font-family:'Anton';font-size:30px;color:#fff;z-index:1}
+  .deal .ph .yr{font-size:13px;color:var(--c500);z-index:1;margin-top:4px}
+  .deal .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .deal .info{padding:30px 28px;display:flex;flex-direction:column;justify-content:center}
+  .deal .from{font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--c500)}
+  .deal .price{display:flex;align-items:baseline;gap:8px;margin:2px 0}
+  .deal .price .big{font-family:'Anton';font-size:clamp(54px,15vw,92px);line-height:.85;color:#fff}
+  .deal .price .per{font-size:17px;color:var(--c300)}
+  .deal .meta{color:var(--c300);font-size:14.5px;margin:8px 0 4px}.deal .meta b{color:#fff}
+  .deal .urg{display:inline-flex;align-items:center;gap:7px;color:#ffc9c9;font-size:13.5px;font-weight:600;margin:14px 0 20px}
+  .deal .urg .pip{width:7px;height:7px;border-radius:50%;background:var(--vermelho);animation:pip 1.2s ease-in-out infinite}
+  .deal .btn{text-align:center}
+  @media(min-width:760px){.deal{grid-template-columns:1.02fr .98fr}.deal .ph{min-height:340px}}
+  /* foto nos cards de categoria */
+  .card .ph.photo{background:radial-gradient(circle at 50% 42%,#ffffff,#e6e9eb);min-height:190px;padding:8px 10px}
+  .card .ph.photo img{width:100%;height:100%;max-height:180px;object-fit:contain;filter:drop-shadow(0 12px 13px rgba(0,0,0,.22))}
+  .deal .note{font-size:13px;color:var(--c500);margin:3px 0 2px}
+  .card .ph.evph{min-height:178px;background:#e9ecee;padding:0;overflow:hidden}
+  .card .ph.evph img{width:100%;height:100%;object-fit:cover}
+
+  .vf{position:relative;overflow:hidden;min-height:100vh;display:flex;align-items:center;color:#fff;
+    background:radial-gradient(125% 130% at 80% 8%,#23292a 0%,#0e1112 58%)}
+  .vf::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:24px 24px;z-index:1;pointer-events:none}
+  .vf #vf-fx{position:absolute;inset:0;z-index:2;pointer-events:none}
+  .vf .wrap{position:relative;z-index:3;padding:118px 22px 52px;display:grid;gap:24px;grid-template-columns:1fr;align-items:center}
+  .vf .eyebrow{display:flex;align-items:center;gap:9px;color:var(--c300)}
+  .vf .eyebrow i{width:18px;height:2px;background:var(--vermelho);display:inline-block}
+  .vf h1{font-size:clamp(48px,13vw,86px);margin:14px 0 0;color:#fff}
+  .vf h1 .u{position:relative;white-space:nowrap}
+  .vf h1 .u::after{content:"";position:absolute;left:0;right:0;bottom:.04em;height:.1em;background:var(--vermelho);border-radius:3px}
+  .vf .sub{font-size:18px;color:var(--c300);max-width:30em;margin:22px 0 26px}
+  .vf .ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .vf .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}
+  .vf .pills span{border:1px solid rgba(255,255,255,.18);border-radius:30px;padding:8px 15px;font-size:13.5px;font-weight:600;color:#e9eced}
+  .vf .stage{position:relative;display:flex;align-items:center;justify-content:center}
+  .vf .car{position:relative;z-index:3;width:104%;max-width:none;
+    animation:vf-float 5.4s ease-in-out infinite, vf-in 1.05s cubic-bezier(.2,.7,.2,1) both}
+  .vf .streak{position:absolute;z-index:0;left:-14%;top:62%;width:58%;height:7px;transform:translateY(-50%) rotate(-4deg);
+    background:linear-gradient(90deg,rgba(183,1,3,.82),rgba(183,1,3,0));border-radius:8px;filter:blur(.6px);opacity:.8}
+  .vf .chip{position:absolute;z-index:4;left:3%;bottom:5%;background:rgba(15,19,19,.82);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.16);border-radius:30px;padding:8px 15px;font-size:13.5px;color:#fff}
+  .vf .chip b{font-weight:700}
+  .vf .ground{position:absolute;z-index:1;left:17%;right:15%;bottom:15%;height:24px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.55),transparent 70%);filter:blur(7px);animation:vf-sh 5.4s ease-in-out infinite}
+  @keyframes vf-sh{0%,100%{transform:scaleX(1);opacity:.5}50%{transform:scaleX(.9);opacity:.34}}
+  @keyframes vf-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  @keyframes vf-in{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+  @media(prefers-reduced-motion:reduce){.vf .car{animation:vf-in 1s both}}
+  @media(min-width:860px){
+    .vf .wrap{grid-template-columns:1fr 1.08fr;padding:118px 22px 64px;gap:18px}
+    .vf .car{width:116%;margin-right:-8%}
+  }
+
+  .wa-float{position:fixed;right:18px;bottom:18px;z-index:9999;width:58px;height:58px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,0,0,.28);transition:transform .15s}
+  .wa-float:hover{transform:scale(1.08)}
+  .wa-float svg{width:33px;height:33px;fill:#fff}
+  .wa-float::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(37,211,102,.5);animation:wa-pulse 2.2s infinite}
+  @keyframes wa-pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+  @media(min-width:760px){.wa-float{width:62px;height:62px;right:24px;bottom:24px}}
+  a:focus-visible,button:focus-visible,summary:focus-visible,.btn:focus-visible,.btn-ghost:focus-visible,.wa-float:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:8px}
+  @media(max-width:480px){.top .tel span{display:none}.top .tel{font-size:13px}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}.wa-float::after{display:none}}
+
+/* refino promoção semana grátis */
+.chip{font-size:15px;padding:9px 16px;border-color:rgba(183,1,3,.55)}
+.chip b{font-weight:800}
+.chip .hl{background:var(--vermelho);color:#fff;font-weight:800;padding:3px 10px;border-radius:20px;margin-left:3px}
+.caucao-call{font-size:20px;font-weight:800;color:#fff;margin:10px 0 2px;line-height:1.15}
+.caucao-call b{color:var(--vermelho)}
+.from{margin-bottom:16px}
+.info .price{margin-top:4px}
+.big{line-height:1}
+@media(max-width:560px){.caucao-call{font-size:18px}.chip{font-size:13.5px}}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KVRMCT64"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) --><header class="top"><div class="wrap">
+  <img loading="lazy" decoding="async" src="img/9759a5aa7e5f.png" alt="Concept Locadora de Veículos">
+  <a class="tel" href="tel:08009991500"><span>Atendimento</span>0800 999 1500</a>
+</div></header>
+
+<section class="hero vf">
+  <canvas id="vf-fx" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="copy">
+      <span class="eyebrow"><i></i> Promoção · Motorista de app · Curitiba</span>
+      <h1>Primeira semana<br><span class="u">grátis</span></h1>
+      <p class="sub">Alugue o Onix LT pra rodar de Uber e 99. A primeira semana é por nossa conta — você retira pagando só a caução.</p>
+      <div class="ctas"><a class="btn" href="https://app.pipefy.com/public/form/Nx3RxExy" target="_blank" rel="noopener noreferrer">Quero alugar</a><a class="btn-ghost" href="#promo">Ver a promoção</a></div>
+      <div class="pills"><span>Sem cartão de crédito</span><span>Pagamento semanal</span><span>Retire e já rode</span></div>
+    </div>
+    <div class="stage">
+      <div class="streak"></div>
+      <div class="ground"></div>
+      <img decoding="async" fetchpriority="high" class="car" src="img/2adf1a7d4142.webp" alt="Chevrolet Onix da Concept">
+      <span class="chip"><b>Onix LT</b> · <span class="hl">1ª semana grátis</span></span>
+    </div>
+  </div>
+</section>
+<section class="promo" id="promo">
+  <div class="wrap">
+    <span class="promo-badge"><span class="pip"></span> Promoção por tempo limitado</span>
+    <h2>Onix LT 2021–2024</h2>
+    <p class="lead">O carro mais procurado por quem roda de app — e a 1ª semana é por nossa conta. Vagas limitadas pela disponibilidade da frota.</p>
+    <div class="deal">
+      <div class="ph"><img loading="lazy" decoding="async" src="img/d166ffa78ced.webp" alt="Frota de Chevrolet Onix da Concept"></div>
+      <div class="info">
+        <span class="from">Sua primeira semana</span>
+        <div class="price"><span class="big">GRÁTIS</span></div>
+        <p class="caucao-call">Retire pagando <b>apenas a caução</b></p>
+        <span class="note">Depois, R$ 850/semana</span>
+        <p class="meta">Caução <b>R$ 1.200</b> · em até 6x · manutenção inclusa · pagamento semanal</p>
+        <span class="urg"><span class="pip"></span> Oferta enquanto durar a frota disponível</span>
+        <a class="btn" href="https://app.pipefy.com/public/form/Nx3RxExy" target="_blank" rel="noopener noreferrer">Quero esse</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="soft">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Escolha o seu</span>
+      <h2>3 categorias pra você rodar</h2>
+      <p>Todas com manutenção inclusa, documentação em dia e pagamento semanal. Caução de R$ 1.200.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="ph photo"><span class="badge">Mais econômico</span><img loading="lazy" decoding="async" src="img/e6192248b47b.webp" alt="Fiat Mobi"></div>
+        <div class="body"><span class="tag">Pra começar</span><h3>Fiat Mobi Like 2026</h3>
+          <p class="desc">O carro mais em conta pra cair no app gastando pouco com combustível.</p>
+          <div class="price"><div class="v">R$ 750<small> /semana</small></div><div class="cau">Caução R$ 1.200 · em até 6x</div></div>
+          <a class="btn" href="https://app.pipefy.com/public/form/Nx3RxExy" target="_blank" rel="noopener noreferrer">Quero esse</a></div>
+      </div>
+      <div class="card">
+        <div class="ph photo"><span class="badge">Categoria A</span><img loading="lazy" decoding="async" src="img/a3e1e139014c.webp" alt="Chevrolet Onix"></div>
+        <div class="body"><span class="tag">Equilíbrio</span><h3>Onix · Joy Plus · HB20</h3>
+          <p class="desc">Espaço, conforto e baixo consumo — o queridinho de quem roda o dia todo.</p>
+          <div class="price"><div class="v">R$ 850<small> /semana</small></div><div class="cau">Caução R$ 1.200 · em até 6x</div></div>
+          <a class="btn" href="https://app.pipefy.com/public/form/Nx3RxExy" target="_blank" rel="noopener noreferrer">Quero esse</a></div>
+      </div>
+      <div class="card">
+        <div class="ph photo"><span class="badge">Categoria B</span><img loading="lazy" decoding="async" src="img/3ef7c6b8c183.webp" alt="VW Polo"></div>
+        <div class="body"><span class="tag">Completo</span><h3>Argo · Polo · Onix LT Plus · Peugeot</h3>
+          <p class="desc">Os mais completos da frota, pra rodar com mais conforto e disposição.</p>
+          <div class="price"><div class="v">R$ 890<small> /semana</small></div><div class="cau">Caução R$ 1.200 · em até 6x</div></div>
+          <a class="btn" href="https://app.pipefy.com/public/form/Nx3RxExy" target="_blank" rel="noopener noreferrer">Quero esse</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">100% elétrico</span>
+      <h2>Também tem elétrico</h2>
+      <p>Menos posto, menos manutenção e mais dinheiro no bolso. Conheça os modelos elétricos da Concept.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="ph photo"><span class="badge">100% elétrico</span><img loading="lazy" decoding="async" src="img/b060e5040875.webp" alt="BYD Dolphin Mini"></div>
+        <div class="body"><span class="tag">Compacto</span><h3>BYD Dolphin Mini</h3>
+          <p class="desc">Ágil e econômico pra rodar na cidade gastando quase nada com energia.</p>
+          <div class="price"><div class="v">R$ 1.250<small> /semana</small></div><div class="cau">Caução R$ 2.000 · em até 6x</div></div>
+          <a class="btn btn-dark" href="https://app.pipefy.com/public/form/Nx3RxExy" target="_blank" rel="noopener noreferrer">Quero esse</a></div>
+      </div>
+      <div class="card">
+        <div class="ph evph"><span class="badge">100% elétrico</span><img loading="lazy" decoding="async" src="img/7700f324ef00.webp" alt="Geely EX2"></div>
+        <div class="body"><span class="tag">Equilíbrio</span><h3>Geely EX2</h3>
+          <p class="desc">Mais espaço e conforto pro dia inteiro de corrida, sem abrir mão da economia.</p>
+          <div class="price"><div class="v">R$ 1.500<small> /semana</small></div><div class="cau">Caução R$ 2.500 · em até 6x</div></div>
+          <a class="btn btn-dark" href="https://app.pipefy.com/public/form/Nx3RxExy" target="_blank" rel="noopener noreferrer">Quero esse</a></div>
+      </div>
+      <div class="card">
+        <div class="ph evph"><span class="badge">100% elétrico</span><img loading="lazy" decoding="async" src="img/82db8adc7005.webp" alt="BYD Dolphin GS"></div>
+        <div class="body"><span class="tag">Top de linha</span><h3>BYD Dolphin GS</h3>
+          <p class="desc">O mais completo e confortável pra quem roda muito e quer rodar bem.</p>
+          <div class="price"><div class="v">R$ 1.700<small> /semana</small></div><div class="cau">Caução R$ 2.500 · em até 6x</div></div>
+          <a class="btn btn-dark" href="https://app.pipefy.com/public/form/Nx3RxExy" target="_blank" rel="noopener noreferrer">Quero esse</a></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:28px"><a class="btn btn-dark" href="https://eletrico.locadoraconcept.com.br/">Ver todos os elétricos</a></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Sem pegadinha</span><h2>Já vem tudo incluso</h2></div>
+    <div class="bens">
+      <div class="ben"><span class="dot"></span><div><b>Manutenção preventiva inclusa</b><span>Revisão e troca de óleo por nossa conta.</span></div></div>
+      <div class="ben"><span class="dot"></span><div><b>Não precisa de cartão de crédito</b><span>Opção de pagar no Pix pra quem não tem cartão.</span></div></div>
+      <div class="ben"><span class="dot"></span><div><b>Pagamento semanal</b><span>Você paga conforme roda, calcado no dia da retirada.</span></div></div>
+      <div class="ben"><span class="dot"></span><div><b>Sem burocracia</b><span>Análise rápida, retirou e já começa a rodar.</span></div></div>
+      <div class="ben"><span class="dot"></span><div><b>Documentação em dia</b><span>Carro regularizado — você só se preocupa em rodar.</span></div></div>
+      <div class="ben"><span class="dot"></span><div><b>Atendimento de verdade</b><span>Time da Concept pra te apoiar em Curitiba.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">É rápido</span><h2>Como alugar</h2></div>
+    <div class="steps">
+      <div class="stp"><div class="n">1</div><h3>Reserve</h3><p>Faça sua reserva pelo site e envie seus documentos.</p></div>
+      <div class="stp"><div class="n">2</div><h3>Análise rápida</h3><p>CNH com EAR, 21 anos ou mais e comprovante de residência. Aprovação no mesmo dia.</p></div>
+      <div class="stp"><div class="n">3</div><h3>Pegue e rode</h3><p>Retire na Concept, pague só a caução (a 1ª semana é grátis) e já comece a faturar.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Dúvidas</span><h2>Perguntas frequentes</h2></div>
+    <div class="faq">
+      <details open><summary>Precisa de cartão de crédito?</summary><p>Não. Na Concept você aluga sem cartão de crédito e paga por boleto ou Pix semanal.</p></details>
+      <details><summary>A promoção do Onix LT vale por quanto tempo?</summary><p>É uma promoção por tempo limitado, enquanto durar a disponibilidade da frota. O ideal é garantir o quanto antes.</p></details>
+      <details><summary>Quais documentos eu preciso?</summary><p>CNH com a observação EAR (atividade remunerada), ter 21 anos ou mais e um comprovante de residência.</p></details>
+      <details><summary>Como funciona o pagamento?</summary><p>É semanal, calcado no dia da retirada: retirou na segunda, paga toda segunda. Na retirada você paga só a caução — a 1ª semana é por nossa conta. As demais semanas por transferência/boleto.</p></details>
+      <details><summary>A manutenção é por conta de vocês?</summary><p>Sim. Revisões e troca de óleo estão inclusas no seu plano. Você só se preocupa em rodar.</p></details>
+      <details><summary>Posso colocar outro motorista?</summary><p>Não. Só o titular do contrato pode dirigir — não há plano de condutor adicional.</p></details>
+      
+    </div>
+  </div>
+</section>
+
+<section class="dark cta-final" id="reservar">
+  <div class="wrap">
+    <h2>Bora rodar?</h2>
+    <p>Garanta seu carro e comece a faturar essa semana.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn" href="https://app.pipefy.com/public/form/Nx3RxExy" target="_blank" rel="noopener noreferrer">Quero alugar</a>
+      <a class="btn-ghost" href="tel:08009991500">Ligar: 0800 999 1500</a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap">
+  <div class="cols">
+    <div><img loading="lazy" decoding="async" src="img/9759a5aa7e5f.png" alt="Concept Locadora de Veículos"><p>Aluguel de carros para motoristas de aplicativo em Curitiba.</p></div>
+    <div><h4>Endereço</h4><p>Rua Professor Leônidas Ferreira da Costa, 151 — Parolin, Curitiba/PR</p><a href="https://www.google.com/maps/search/?api=1&query=Rua%20Professor%20Le%C3%B4nidas%20Ferreira%20da%20Costa%2C151%2C%20Parolin%2C%20Curitiba%2C%20PR" target="_blank" rel="noopener noreferrer">Ver no mapa →</a></div>
+    <div><h4>Contato</h4><a href="tel:08009991500">0800 999 1500</a><p>WhatsApp: seg a sex, 9h–18h</p><a href="https://www.locadoraconcept.com.br" target="_blank" rel="noopener noreferrer">locadoraconcept.com.br</a><a href="https://instagram.com/locadoraconcept" target="_blank" rel="noopener noreferrer">@locadoraconcept</a></div>
+  </div>
+  <div class="fine">© Concept Locadora de Veículos · CNPJ 35.015.925/0001-90 · Curitiba/PR. Promoção por tempo limitado, sujeita à disponibilidade da frota. Valores e imagens ilustrativas.</div>
+</div></footer>
+<a class="wa-float" href="https://wa.me/5508009991500?text=Ol%C3%A1!%20Quero%20alugar%20um%20carro%20na%20Concept." target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp da Concept" title="Falar no WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.04 4C9.93 4 4.98 8.95 4.98 15.06c0 1.96.51 3.87 1.49 5.56L4 28l7.6-2.42a11.07 11.07 0 0 0 4.44.92h.01c6.11 0 11.06-4.95 11.06-11.06C27.11 8.95 22.15 4 16.04 4zm0 20.16h-.01c-1.45 0-2.87-.39-4.11-1.12l-.29-.17-3.05.97.99-2.97-.19-.31a8.96 8.96 0 0 1-1.37-4.77c0-4.96 4.04-9 9.01-9 2.41 0 4.67.94 6.37 2.64a8.95 8.95 0 0 1 2.63 6.37c0 4.97-4.04 9.01-9.01 9.01zm4.95-6.74c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.14-1.14-.42-2.18-1.34-.81-.72-1.35-1.61-1.51-1.88-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.44-.46-.61-.46-.16-.01-.34-.01-.52-.01s-.48.07-.73.34c-.25.27-.96.94-.96 2.29s.98 2.66 1.12 2.84c.14.18 1.93 2.95 4.68 4.13.65.28 1.16.45 1.56.58.66.21 1.25.18 1.72.11.52-.08 1.6-.65 1.83-1.28.23-.63.23-1.17.16-1.28-.07-.11-.25-.18-.52-.32z"/></svg></a><script type="application/ld+json">{"@context":"https://schema.org","@type":"AutoRental","name":"Concept Locadora de Veículos","url":"https://www.locadoraconcept.com.br/","telephone":"08009991500","image":"https://www.locadoraconcept.com.br/og-cover.jpg","address":{"@type":"PostalAddress","streetAddress":"Rua Professor Leônidas Ferreira da Costa, 151","addressLocality":"Curitiba","addressRegion":"PR","addressCountry":"BR"},"areaServed":{"@type":"City","name":"Curitiba"},"priceRange":"$$"}</script><script>
+(function(){
+  function fire(ev,m){try{if(window.fbq)fbq('track',ev);}catch(e){}try{(window.dataLayer=window.dataLayer||[]).push({event:'lead_click',metodo:m,evento_meta:ev});}catch(e){}}
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a');if(!a)return;var h=a.getAttribute('href')||'';
+    if(a.classList.contains('wa-float')||h.indexOf('wa.me')>-1){fire('Contact','whatsapp');}
+  },true);
+})();
+</script><script>(function(){var c=document.getElementById('vf-fx');if(!c)return;if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)return;var x=c.getContext('2d'),D=Math.min(2,window.devicePixelRatio||1),h=c.parentElement,p=[],N=0;
+function S(){c.width=h.offsetWidth*D;c.height=h.offsetHeight*D;c.style.width=h.offsetWidth+'px';c.style.height=h.offsetHeight+'px';N=Math.min(70,h.offsetWidth/22|0);p=[];for(var i=0;i<N;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.2*D,vy:(Math.random()-.5)*.2*D,r:(Math.random()*1.4+.5)*D})}
+function L(){if(document.hidden){requestAnimationFrame(L);return;}x.clearRect(0,0,c.width,c.height);var m=130*D;for(var i=0;i<p.length;i++){var a=p[i];a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>c.width)a.vx*=-1;if(a.y<0||a.y>c.height)a.vy*=-1;x.beginPath();x.arc(a.x,a.y,a.r,0,6.283);x.fillStyle='rgba(255,255,255,.45)';x.fill();for(var j=i+1;j<p.length;j++){var b=p[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<m){x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.strokeStyle='rgba(255,255,255,'+(.12*(1-d/m))+')';x.lineWidth=D;x.stroke()}}}requestAnimationFrame(L)}
+S();window.addEventListener('resize',S);L();})();</script>
+<script src="lead-modal.js" defer></script>
+</body>
+</html>
