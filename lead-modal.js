@@ -7,19 +7,28 @@
   window.__conceptLeadModal = true;
 
   var host = location.hostname;
-  // www/apex carregam a promo da semana grátis (LP principal) → mesmo evento da promo.
-  // Etiqueta PADRÃO vem do domínio, mas um botão pode sobrepor com data-lead-lp
-  // (ex.: card de elétrico dentro da página da semana grátis vira "eletrico").
+  // Etiqueta PADRÃO vem do DOMÍNIO. Um botão pode sobrepor com data-lead-lp (slug
+  // absoluto) OU compor uma variante com data-lead-variant (sufixo sobre a base,
+  // ex.: "eletrico" → "<base>-eletrico"). Assim os cards de elétrico ficam iguais
+  // em todo domínio e o domínio decide o resto (site-oficial vs. semana grátis).
+  // promo. → gratis (LP semana grátis) · www/apex → site-oficial · eletrico. → eletrico.
   var LP_PADRAO = /eletric/i.test(host)
     ? "eletrico"
-    : /promo|gratis|^www\.|^locadoraconcept/i.test(host)
+    : /promo|gratis/i.test(host)
       ? "gratis"
-      : "combustao";
+      : /(^|\.)locadoraconcept\.com\.br$/i.test(host)
+        ? "site-oficial"
+        : "combustao";
+  var EVENTOS = {
+    combustao: "LeadCombustao",
+    eletrico: "LeadEletrico",
+    gratis: "LeadSemanaGratis",
+    "gratis-eletrico": "LeadSemanaGratisEletrico",
+    "site-oficial": "LeadSiteOficial",
+    "site-oficial-eletrico": "LeadSiteOficialEletrico",
+  };
   function eventoDe(lp) {
-    if (lp === "gratis-eletrico") return "LeadSemanaGratisEletrico";
-    if (lp === "eletrico") return "LeadEletrico";
-    if (lp === "gratis") return "LeadSemanaGratis";
-    return "LeadCombustao";
+    return EVENTOS[lp] || "Lead";
   }
   var LP = LP_PADRAO;
   var EVENTO = eventoDe(LP);
@@ -141,9 +150,13 @@
         var a = e.target.closest('a[href*="pipefy.com/public/form"],[data-lead-open]');
         if (a) {
           e.preventDefault();
-          // o botão pode forçar a etiqueta (ex.: card de elétrico na página da semana grátis)
+          // data-lead-lp = slug absoluto; data-lead-variant = sufixo sobre a base do domínio
+          // (ex.: card de elétrico → "<base>-eletrico": gratis-eletrico ou site-oficial-eletrico)
           var over = a.getAttribute && a.getAttribute("data-lead-lp");
-          LP = over && /^[a-z0-9_-]{1,24}$/.test(over) ? over : LP_PADRAO;
+          var vary = a.getAttribute && a.getAttribute("data-lead-variant");
+          if (over && /^[a-z0-9_-]{1,24}$/.test(over)) LP = over;
+          else if (vary && /^[a-z0-9_]{1,20}$/.test(vary)) LP = LP_PADRAO + "-" + vary;
+          else LP = LP_PADRAO;
           EVENTO = eventoDe(LP);
           abrir();
         }
