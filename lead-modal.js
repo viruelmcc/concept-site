@@ -8,13 +8,18 @@
 
   var host = location.hostname;
   // www/apex carregam a promo da semana grátis (LP principal) → mesmo evento da promo.
-  var LP = /eletric/i.test(host)
+  // Etiqueta PADRÃO vem do domínio, mas um botão pode sobrepor com data-lead-lp
+  // (ex.: card de elétrico dentro da página da semana grátis vira "eletrico").
+  var LP_PADRAO = /eletric/i.test(host)
     ? "eletrico"
     : /promo|gratis|^www\.|^locadoraconcept/i.test(host)
       ? "gratis"
       : "combustao";
-  var EVENTO =
-    LP === "gratis" ? "LeadSemanaGratis" : LP === "eletrico" ? "LeadEletrico" : "LeadCombustao";
+  function eventoDe(lp) {
+    return lp === "gratis" ? "LeadSemanaGratis" : lp === "eletrico" ? "LeadEletrico" : "LeadCombustao";
+  }
+  var LP = LP_PADRAO;
+  var EVENTO = eventoDe(LP);
   var LEAD_ENDPOINT =
     "https://quaks.com.br/api/public/lead/paula-casagrande?key=aa5243d8a2a3955ff6d712d55e4c9ee8e477964c1c6b2fc3";
 
@@ -133,6 +138,10 @@
         var a = e.target.closest('a[href*="pipefy.com/public/form"],[data-lead-open]');
         if (a) {
           e.preventDefault();
+          // o botão pode forçar a etiqueta (ex.: card de elétrico na página da semana grátis)
+          var over = a.getAttribute && a.getAttribute("data-lead-lp");
+          LP = over && /^(eletrico|gratis|combustao)$/.test(over) ? over : LP_PADRAO;
+          EVENTO = eventoDe(LP);
           abrir();
         }
       },
