@@ -16,7 +16,10 @@
       ? "gratis"
       : "combustao";
   function eventoDe(lp) {
-    return lp === "gratis" ? "LeadSemanaGratis" : lp === "eletrico" ? "LeadEletrico" : "LeadCombustao";
+    if (lp === "gratis-eletrico") return "LeadSemanaGratisEletrico";
+    if (lp === "eletrico") return "LeadEletrico";
+    if (lp === "gratis") return "LeadSemanaGratis";
+    return "LeadCombustao";
   }
   var LP = LP_PADRAO;
   var EVENTO = eventoDe(LP);
@@ -140,7 +143,7 @@
           e.preventDefault();
           // o botão pode forçar a etiqueta (ex.: card de elétrico na página da semana grátis)
           var over = a.getAttribute && a.getAttribute("data-lead-lp");
-          LP = over && /^(eletrico|gratis|combustao)$/.test(over) ? over : LP_PADRAO;
+          LP = over && /^[a-z0-9_-]{1,24}$/.test(over) ? over : LP_PADRAO;
           EVENTO = eventoDe(LP);
           abrir();
         }
