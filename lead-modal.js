@@ -7,18 +7,25 @@
   window.__conceptLeadModal = true;
 
   var host = location.hostname;
-  // Etiqueta PADRÃO vem do DOMÍNIO. Um botão pode sobrepor com data-lead-lp (slug
-  // absoluto) OU compor uma variante com data-lead-variant (sufixo sobre a base,
-  // ex.: "eletrico" → "<base>-eletrico"). Assim os cards de elétrico ficam iguais
-  // em todo domínio e o domínio decide o resto (site-oficial vs. semana grátis).
+  var _qs = new URLSearchParams(location.search);
+  var _origem =
+    _qs.get("origem") ||
+    (typeof window.CONCEPT_LEAD_LP === "string" ? window.CONCEPT_LEAD_LP : "");
+  // Etiqueta PADRÃO da página: 1º uma ORIGEM explícita (?origem= no link OU
+  // window.CONCEPT_LEAD_LP setado pela página — ex.: link do WhatsApp = "whatsapp");
+  // senão vem do DOMÍNIO. Um botão ainda pode sobrepor com data-lead-lp (slug absoluto)
+  // OU compor variante com data-lead-variant (sufixo, ex.: "eletrico" → "<base>-eletrico").
   // promo. → gratis (LP semana grátis) · www/apex → site-oficial · eletrico. → eletrico.
-  var LP_PADRAO = /eletric/i.test(host)
-    ? "eletrico"
-    : /promo|gratis/i.test(host)
-      ? "gratis"
-      : /(^|\.)locadoraconcept\.com\.br$/i.test(host)
-        ? "site-oficial"
-        : "combustao";
+  var LP_PADRAO =
+    _origem && /^[a-z0-9_-]{1,24}$/.test(_origem)
+      ? _origem
+      : /eletric/i.test(host)
+        ? "eletrico"
+        : /promo|gratis/i.test(host)
+          ? "gratis"
+          : /(^|\.)locadoraconcept\.com\.br$/i.test(host)
+            ? "site-oficial"
+            : "combustao";
   // Meta/Pixel: UM evento de conversão por PÁGINA (base do domínio). O botão NÃO muda
   // o evento do Meta — senão divide o sinal e atrapalha a otimização de campanha. A
   // diferenciação por botão (elétrico etc.) fica SÓ no `lp` mandado pro Pipefy (etiqueta).
@@ -27,6 +34,7 @@
     eletrico: "LeadEletrico",
     gratis: "LeadSemanaGratis",
     "site-oficial": "LeadSiteOficial",
+    whatsapp: "LeadWhatsapp",
   };
   function eventoDe(lp) {
     return EVENTOS[lp] || "Lead";
@@ -164,6 +172,10 @@
       },
       true,
     );
+
+    // abertura automática: página /cadastro do link de WhatsApp (window.CONCEPT_LEAD_OPEN)
+    // ou qualquer link com ?cadastro=1. O LP já é o LP_PADRAO da página (ex.: "whatsapp").
+    if (window.CONCEPT_LEAD_OPEN || _qs.get("cadastro") === "1") abrir();
 
     // mostra/esconde "quem indicou"
     form.querySelectorAll('input[name="lm-indicado"]').forEach(function (r) {
