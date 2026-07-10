@@ -19,19 +19,20 @@
       : /(^|\.)locadoraconcept\.com\.br$/i.test(host)
         ? "site-oficial"
         : "combustao";
+  // Meta/Pixel: UM evento de conversão por PÁGINA (base do domínio). O botão NÃO muda
+  // o evento do Meta — senão divide o sinal e atrapalha a otimização de campanha. A
+  // diferenciação por botão (elétrico etc.) fica SÓ no `lp` mandado pro Pipefy (etiqueta).
   var EVENTOS = {
     combustao: "LeadCombustao",
     eletrico: "LeadEletrico",
     gratis: "LeadSemanaGratis",
-    "gratis-eletrico": "LeadSemanaGratisEletrico",
     "site-oficial": "LeadSiteOficial",
-    "site-oficial-eletrico": "LeadSiteOficialEletrico",
   };
   function eventoDe(lp) {
     return EVENTOS[lp] || "Lead";
   }
   var LP = LP_PADRAO;
-  var EVENTO = eventoDe(LP);
+  var EVENTO = eventoDe(LP_PADRAO);
   var LEAD_ENDPOINT =
     "https://quaks.com.br/api/public/lead/paula-casagrande?key=aa5243d8a2a3955ff6d712d55e4c9ee8e477964c1c6b2fc3";
 
@@ -157,7 +158,7 @@
           if (over && /^[a-z0-9_-]{1,24}$/.test(over)) LP = over;
           else if (vary && /^[a-z0-9_]{1,20}$/.test(vary)) LP = LP_PADRAO + "-" + vary;
           else LP = LP_PADRAO;
-          EVENTO = eventoDe(LP);
+          // só o LP (etiqueta do Pipefy) muda por botão; o EVENTO do Meta é fixo pela página.
           abrir();
         }
       },
@@ -325,7 +326,9 @@
     });
 
     function dispararConversao(eid) {
-      var dados = { content_name: LP, content_category: "pre_cadastro", lp: LP };
+      // Meta vê só a PÁGINA (LP_PADRAO): mesmo evento pra todos os botões da página.
+      // O slug do botão (LP) vai só pro Pipefy (fd "lp") e como referência no dataLayer.
+      var dados = { content_name: LP_PADRAO, content_category: "pre_cadastro", lp: LP_PADRAO };
       try {
         if (window.fbq) {
           fbq("track", "Lead", dados, { eventID: eid });
@@ -335,8 +338,9 @@
       try {
         (window.dataLayer = window.dataLayer || []).push({
           event: "lead_submit",
-          lp: LP,
+          lp: LP_PADRAO,
           evento_meta: EVENTO,
+          lp_pipefy: LP,
           event_id: eid,
         });
       } catch (e) {}
