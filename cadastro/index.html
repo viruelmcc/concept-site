@@ -10,26 +10,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0F1313;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;line-height:1.55}
-  .logo{height:50px;width:auto;margin-bottom:38px}
-  .eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#B70103;font-weight:700;margin-bottom:10px}
-  h1{font-family:'Anton',sans-serif;font-weight:400;font-size:46px;line-height:1.02;text-transform:uppercase;margin-bottom:16px}
-  p.sub{font-size:16px;color:#c8cccd;max-width:430px;margin:0 auto 34px}
-  .cta{display:inline-block;background:#B70103;color:#fff;font-weight:700;font-size:17px;padding:16px 42px;border-radius:10px;border:none;cursor:pointer;text-decoration:none;font-family:inherit}
-  .cta:hover{background:#9a0103}
-  .fine{margin-top:30px;font-size:12.5px;color:#7f8688;max-width:390px}
-  @media(max-width:480px){h1{font-size:36px}.logo{height:44px;margin-bottom:30px}}
+  body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0F1313;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 56px;line-height:1.55}
+  .logo{height:48px;width:auto;margin-bottom:28px}
+  #form-container{width:100%;display:flex;justify-content:center}
+  @media(max-width:480px){.logo{height:42px;margin-bottom:22px}}
 </style>
 </head>
 <body>
   <img class="logo" src="/img/9759a5aa7e5f.png" alt="Concept Locadora de Veículos">
-  <div class="eyebrow">Pré-cadastro · Concept</div>
-  <h1>Comece seu<br>cadastro</h1>
-  <p class="sub">Preencha seus dados e anexe sua CNH e comprovante de residência. Nossa equipe analisa e te chama em até 24h úteis pra reservar seu carro.</p>
-  <button class="cta" data-lead-open>Preencher meu cadastro</button>
-  <p class="fine">Formulário oficial da Locadora Concept · CNPJ 35.015.925/0001-90 · Curitiba/PR. Nunca peça nem envie senhas.</p>
+  <main id="form-container"></main>
 
-  <script>window.CONCEPT_LEAD_LP="whatsapp";window.CONCEPT_LEAD_OPEN=true;</script>
+  <script>window.CONCEPT_LEAD_LP="whatsapp";window.CONCEPT_LEAD_INLINE="#form-container";</script>
   <script src="/lead-modal.js"></script>
 </body>
 </html>

@@ -80,11 +80,10 @@
     ".lm-suc .lm-ic{width:64px;height:64px;border-radius:50%;background:#16a34a;color:#fff;font-size:36px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}" +
     ".lm-suc h2{font-family:'Anton','Inter',sans-serif;text-transform:uppercase;color:#0F1313;font-size:26px;margin:0 0 8px}" +
     ".lm-suc p{color:#6b7173;font-size:15px;margin:0}" +
-    "@media(max-width:560px){.lm-ov{padding:0}.lm-modal{max-width:100%;min-height:100%;border-radius:0;padding-top:20px}}";
+    ".lm-inline{background:#fff;width:100%;max-width:540px;margin:0 auto;border-radius:16px;padding:26px 26px 30px;color:#16191a;line-height:1.55;box-shadow:0 20px 60px rgba(0,0,0,.28)}" +
+    "@media(max-width:560px){.lm-ov{padding:0}.lm-modal{max-width:100%;min-height:100%;border-radius:0;padding-top:20px}.lm-inline{border-radius:14px;padding:22px 18px 26px}}";
 
-  var HTML =
-    '<div class="lm-ov" id="lm-ov" hidden><div class="lm-modal" role="dialog" aria-modal="true" aria-labelledby="lm-t">' +
-    '<button class="lm-x" id="lm-fechar" aria-label="Fechar">&times;</button>' +
+  var INNER =
     '<div id="lm-passo-form">' +
     '<span class="lm-eyebrow">Pré-cadastro · Concept</span>' +
     '<h2 class="lm-title" id="lm-t">Pré Cadastro</h2>' +
@@ -112,7 +111,13 @@
     '<button type="submit" class="lm-enviar" id="lm-btn">Enviar</button>' +
     '<p class="lm-nota">Nunca envie senhas ou dados confidenciais. Formulário oficial da Locadora Concept (CNPJ 35.015.925/0001-90).</p>' +
     "</form></div>" +
-    '<div id="lm-passo-suc" class="lm-suc" hidden><div class="lm-ic">&check;</div><h2>Pré-cadastro enviado!</h2><p>Recebemos seus dados. Entraremos em contato em até 24h úteis pelo WhatsApp ou e-mail. 🚗</p></div>' +
+    '<div id="lm-passo-suc" class="lm-suc" hidden><div class="lm-ic">&check;</div><h2>Pré-cadastro enviado!</h2><p>Recebemos seus dados. Entraremos em contato em até 24h úteis pelo WhatsApp ou e-mail. 🚗</p></div>';
+
+  // Modal (LPs): overlay + botão fechar em volta do INNER.
+  var HTML_MODAL =
+    '<div class="lm-ov" id="lm-ov" hidden><div class="lm-modal" role="dialog" aria-modal="true" aria-labelledby="lm-t">' +
+    '<button class="lm-x" id="lm-fechar" aria-label="Fechar">&times;</button>' +
+    INNER +
     "</div></div>";
 
   function fld(key, label, input, erro) {
@@ -126,9 +131,26 @@
     var st = document.createElement("style");
     st.textContent = CSS;
     document.head.appendChild(st);
-    var holder = document.createElement("div");
-    holder.innerHTML = HTML;
-    document.body.appendChild(holder);
+    // Modo INLINE: se a página pede (window.CONCEPT_LEAD_INLINE = seletor, ou um
+    // elemento [data-lead-inline]), o form vai DIRETO no container — sem overlay,
+    // sem botão de abrir/fechar. Ex.: página /cadastro do link de WhatsApp. Senão,
+    // comportamento normal de modal (LPs).
+    var inlineSel = typeof window.CONCEPT_LEAD_INLINE === "string" ? window.CONCEPT_LEAD_INLINE : null;
+    var inlineTarget = null;
+    try {
+      inlineTarget = inlineSel ? document.querySelector(inlineSel) : document.querySelector("[data-lead-inline]");
+    } catch (e) {}
+    var INLINE = !!inlineTarget;
+    if (INLINE) {
+      var box = document.createElement("div");
+      box.className = "lm-inline";
+      box.innerHTML = INNER;
+      inlineTarget.appendChild(box);
+    } else {
+      var holder = document.createElement("div");
+      holder.innerHTML = HTML_MODAL;
+      document.body.appendChild(holder);
+    }
 
     var ov = document.getElementById("lm-ov");
     var form = document.getElementById("lm-form");
@@ -139,17 +161,21 @@
     if (qs.get("fbclid")) document.getElementById("lm-fbclid").value = qs.get("fbclid");
 
     function abrir() {
+      if (!ov) return;
       ov.hidden = false;
       document.documentElement.style.overflow = "hidden";
     }
     function fechar() {
+      if (!ov) return;
       ov.hidden = true;
       document.documentElement.style.overflow = "";
     }
-    document.getElementById("lm-fechar").onclick = fechar;
-    ov.addEventListener("click", function (e) {
-      if (e.target === ov) fechar();
-    });
+    var _xbtn = document.getElementById("lm-fechar");
+    if (_xbtn) _xbtn.onclick = fechar;
+    if (ov)
+      ov.addEventListener("click", function (e) {
+        if (e.target === ov) fechar();
+      });
 
     // intercepta os botões que iam pro form público do Pipefy (e [data-lead-open])
     document.addEventListener(
