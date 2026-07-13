@@ -351,14 +351,18 @@
         .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
         .catch(function () { return { ok: false }; })
         .then(function (resp) {
-          if (resp && resp.ok) {
+          // Só confirma "enviado" se o card foi REALMENTE criado (cardId presente).
+          // Assim honeypot/falha não viram falso sucesso — o cliente vê o erro e corrige.
+          if (resp && resp.ok && resp.cardId) {
             dispararConversao(eid);
             document.getElementById("lm-passo-form").hidden = true;
             document.getElementById("lm-passo-suc").hidden = false;
           } else {
             btn.disabled = false;
             btn.textContent = "Enviar";
-            alert("Não consegui enviar agora. Confira os campos e tente de novo.");
+            alert(
+              "Não consegui concluir seu envio agora. Confira os campos e tente de novo — se continuar, fale com a gente no WhatsApp 0800 999 1500.",
+            );
           }
         });
     });
