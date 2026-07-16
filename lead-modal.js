@@ -263,12 +263,25 @@
     });
     function add(k, fl) {
       for (var i = 0; i < fl.length; i++) {
-        var f = fl[i];
-        if (f.size > 15 * 1024 * 1024) {
-          alert('Arquivo "' + f.name + '" maior que 15MB.');
-          continue;
-        }
-        arquivos[k].push(f);
+        (function (f) {
+          if (f.size > 15 * 1024 * 1024) {
+            alert('Arquivo "' + f.name + '" maior que 15MB.');
+            return;
+          }
+          // Lê os bytes pra memória AGORA (arquivo fresco). No mobile a referência
+          // de File "expira" e chega vazia (0 bytes) no envio — snapshot resolve isso.
+          var item = { name: f.name, size: f.size, type: f.type, blob: null, erroLeitura: false };
+          item.read = f
+            .arrayBuffer()
+            .then(function (buf) {
+              item.blob = new Blob([buf], { type: f.type || "application/octet-stream" });
+              if (item.blob.size > 0) item.size = item.blob.size;
+            })
+            .catch(function () {
+              item.erroLeitura = true;
+            });
+          arquivos[k].push(item);
+        })(fl[i]);
       }
       render(k);
     }
@@ -332,39 +345,74 @@
       document.getElementById("lm-event_id").value = eid;
       var ind = (form.querySelector('input[name="lm-indicado"]:checked') || {}).value;
 
-      var fd = new FormData();
-      fd.append("nome", document.getElementById("lm-nome").value.trim());
-      fd.append("cpf", cpf.value);
-      fd.append("whatsapp", wh.value);
-      fd.append("email", document.getElementById("lm-email").value.trim());
-      fd.append("indicado", ind);
-      if (ind === "Sim") fd.append("indicadoPor", document.getElementById("lm-indicadoPor").value.trim());
-      fd.append("lp", LP);
-      fd.append("event_id", eid);
-      fd.append("gclid", document.getElementById("lm-gclid").value);
-      fd.append("fbclid", document.getElementById("lm-fbclid").value);
-      fd.append("website", document.getElementById("lm-website").value);
-      arquivos.cnh.forEach(function (f) { fd.append("cnh", f, f.name); });
-      arquivos.comp.forEach(function (f) { fd.append("comprovante", f, f.name); });
+      function reativar() {
+        btn.disabled = false;
+        btn.textContent = "Enviar";
+      }
 
-      fetch(LEAD_ENDPOINT, { method: "POST", body: fd })
-        .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
-        .catch(function () { return { ok: false }; })
-        .then(function (resp) {
-          // Só confirma "enviado" se o card foi REALMENTE criado (cardId presente).
-          // Assim honeypot/falha não viram falso sucesso — o cliente vê o erro e corrige.
-          if (resp && resp.ok && resp.cardId) {
-            dispararConversao(eid);
-            document.getElementById("lm-passo-form").hidden = true;
-            document.getElementById("lm-passo-suc").hidden = false;
-          } else {
-            btn.disabled = false;
-            btn.textContent = "Enviar";
-            alert(
-              "Não consegui concluir seu envio agora. Confira os campos e tente de novo — se continuar, fale com a gente no WhatsApp 0800 999 1500.",
-            );
-          }
+      // Garante que TODOS os anexos já viraram bytes em memória antes de montar o envio.
+      var itens = arquivos.cnh.concat(arquivos.comp);
+      Promise.all(
+        itens.map(function (it) {
+          return it.read;
+        }),
+      ).then(function () {
+        var ruins = itens.filter(function (it) {
+          return it.erroLeitura || !it.blob || it.blob.size === 0;
         });
+        if (ruins.length) {
+          reativar();
+          alert(
+            "Não consegui ler " +
+              (ruins.length > 1 ? "alguns dos seus arquivos" : 'o arquivo "' + ruins[0].name + '"') +
+              ". Remova e anexe de novo, por favor (evite escolher pela nuvem — use a foto/PDF do próprio celular).",
+          );
+          return;
+        }
+
+        var fd = new FormData();
+        fd.append("nome", document.getElementById("lm-nome").value.trim());
+        fd.append("cpf", cpf.value);
+        fd.append("whatsapp", wh.value);
+        fd.append("email", document.getElementById("lm-email").value.trim());
+        fd.append("indicado", ind);
+        if (ind === "Sim") fd.append("indicadoPor", document.getElementById("lm-indicadoPor").value.trim());
+        fd.append("lp", LP);
+        fd.append("event_id", eid);
+        fd.append("gclid", document.getElementById("lm-gclid").value);
+        fd.append("fbclid", document.getElementById("lm-fbclid").value);
+        fd.append("website", document.getElementById("lm-website").value);
+        arquivos.cnh.forEach(function (it) {
+          fd.append("cnh", it.blob, it.name);
+        });
+        arquivos.comp.forEach(function (it) {
+          fd.append("comprovante", it.blob, it.name);
+        });
+
+        fetch(LEAD_ENDPOINT, { method: "POST", body: fd })
+          .then(function (r) {
+            return r.json().catch(function () {
+              return { ok: false };
+            });
+          })
+          .catch(function () {
+            return { ok: false };
+          })
+          .then(function (resp) {
+            // Só confirma "enviado" se o card foi REALMENTE criado (cardId presente).
+            // Assim honeypot/falha não viram falso sucesso — o cliente vê o erro e corrige.
+            if (resp && resp.ok && resp.cardId) {
+              dispararConversao(eid);
+              document.getElementById("lm-passo-form").hidden = true;
+              document.getElementById("lm-passo-suc").hidden = false;
+            } else {
+              reativar();
+              alert(
+                "Não consegui concluir seu envio agora. Confira os campos e tente de novo — se continuar, fale com a gente no WhatsApp 0800 999 1500.",
+              );
+            }
+          });
+      });
     });
 
     function dispararConversao(eid) {
