@@ -93,11 +93,6 @@
     fld("cpf", "CPF", '<input type="text" id="lm-cpf" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">', "Informe um CPF válido.") +
     fld("whats", "Número de WhatsApp", '<input type="tel" id="lm-whats" inputmode="numeric" placeholder="(99) 99999-9999" maxlength="16">', "Informe um WhatsApp válido com DDD.") +
     fld("email", "Email", '<input type="email" id="lm-email" autocomplete="email" placeholder="voce@email.com">', "Informe um e-mail válido.") +
-    '<div class="lm-fld" data-fld="indicado"><label class="lm-lab">Você foi indicado? <span class="lm-req">*</span></label>' +
-    '<div class="lm-seg"><label><input type="radio" name="lm-indicado" value="Sim"><span>Sim</span></label><label><input type="radio" name="lm-indicado" value="Não"><span>Não</span></label></div>' +
-    '<div class="lm-erro">Selecione uma opção.</div></div>' +
-    '<div class="lm-fld" data-fld="indicadoPor" id="lm-indic-wrap" style="display:none"><label class="lm-lab">Nome completo de quem te indicou <span class="lm-req">*</span></label>' +
-    '<input type="text" id="lm-indicadoPor" placeholder="Nome do motorista que te indicou"><div class="lm-erro">Informe o nome de quem te indicou.</div></div>' +
     '<div class="lm-fld" data-fld="cnh"><label class="lm-lab">Inclua sua CNH Física ou CNH Digital <span class="lm-req">*</span></label>' +
     '<div class="lm-help"><b>Condições:</b><ul><li>Ter pelo menos 21 anos.</li><li>Ter EAR na CNH.</li><li>CNH definitiva e dentro da validade.</li></ul><div style="margin-top:6px"><b>CNH física:</b> foto legível da CNH ABERTA.<br><b>CNH digital:</b> PDF do documento com QRCODE.</div></div>' +
     '<div class="lm-drop" data-drop="cnh">Arraste os arquivos aqui ou clique para enviar</div>' +
@@ -202,13 +197,6 @@
     // abertura automática: página /cadastro do link de WhatsApp (window.CONCEPT_LEAD_OPEN)
     // ou qualquer link com ?cadastro=1. O LP já é o LP_PADRAO da página (ex.: "whatsapp").
     if (window.CONCEPT_LEAD_OPEN || _qs.get("cadastro") === "1") abrir();
-
-    // mostra/esconde "quem indicou"
-    form.querySelectorAll('input[name="lm-indicado"]').forEach(function (r) {
-      r.addEventListener("change", function () {
-        document.getElementById("lm-indic-wrap").style.display = r.value === "Sim" ? "" : "none";
-      });
-    });
 
     var cpf = document.getElementById("lm-cpf");
     cpf.oninput = function () {
@@ -315,12 +303,6 @@
       var w = wh.value.replace(/\D/g, ""); var bw = w.length < 10; setErro("whats", bw); if (bw) ok = false;
       var em = document.getElementById("lm-email").value.trim();
       var be = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em); setErro("email", be); if (be) ok = false;
-      var ind = form.querySelector('input[name="lm-indicado"]:checked');
-      setErro("indicado", !ind); if (!ind) ok = false;
-      if (ind && ind.value === "Sim") {
-        var ip = document.getElementById("lm-indicadoPor").value.trim();
-        var bip = ip.length < 3; setErro("indicadoPor", bip); if (bip) ok = false;
-      } else setErro("indicadoPor", false);
       setErro("cnh", arquivos.cnh.length === 0); if (!arquivos.cnh.length) ok = false;
       setErro("comp", arquivos.comp.length === 0); if (!arquivos.comp.length) ok = false;
       return ok;
@@ -343,7 +325,6 @@
       btn.textContent = "Enviando…";
       var eid = uuid();
       document.getElementById("lm-event_id").value = eid;
-      var ind = (form.querySelector('input[name="lm-indicado"]:checked') || {}).value;
 
       function reativar() {
         btn.disabled = false;
@@ -375,8 +356,6 @@
         fd.append("cpf", cpf.value);
         fd.append("whatsapp", wh.value);
         fd.append("email", document.getElementById("lm-email").value.trim());
-        fd.append("indicado", ind);
-        if (ind === "Sim") fd.append("indicadoPor", document.getElementById("lm-indicadoPor").value.trim());
         fd.append("lp", LP);
         fd.append("event_id", eid);
         fd.append("gclid", document.getElementById("lm-gclid").value);
