@@ -1,7 +1,8 @@
 /* Concept — modal de pré-cadastro nas LPs. Autossuficiente: injeta CSS + HTML e intercepta os botões
    de "Quero alugar". Desde a virada do Pipefy (05/10/2026) ele pede só nome, CPF, WhatsApp e e-mail e entrega
    o pré-cadastro direto no MOTRIK, que abre a tela de envio de CNH e comprovante. Classes prefixadas com lm-
-   pra não colidir com o CSS da LP. A conversão (Lead + evento por LP) dispara aqui, no envio validado. */
+   pra não colidir com o CSS da LP. A conversão (Lead + evento por LP) dispara aqui, quando o Motrik confirma
+   que o cadastro foi criado. */
 (function () {
   if (window.__conceptLeadModal) return;
   window.__conceptLeadModal = true;
@@ -265,15 +266,14 @@
       var eid = uuid();
       document.getElementById("lm-event_id").value = eid;
 
-      // ── VIRADA DO PIPEFY (05/10/2026): o pré-cadastro vai direto para o Motrik ──
-      // A conversão dispara AQUI, no site — mesmo Pixel, mesmos eventos, mesmo domínio de sempre. Depois o
-      // navegador envia os dados (no corpo, nunca na URL) para o Motrik, que cria a conta, já deixa a pessoa
-      // logada e abre a tela de envio de CNH e comprovante.
-      dispararConversao(eid);
-      var destino = document.createElement("form");
-      destino.method = "POST";
-      destino.action = LEAD_ENDPOINT;
-      destino.style.display = "none";
+      // ── O PRÉ-CADASTRO VAI DIRETO PARA O MOTRIK (05/10/2026) ──
+      // O envio é feito daqui e a resposta decide o que a pessoa vê — é o que evita perder lead por erro:
+      //   criou a conta      → dispara a conversão (só agora, com o cadastro confirmado) e abre o envio de documentos;
+      //   já tem cadastro    → abre a tela de entrada, que explica; não conta como conversão;
+      //   dado recusado      → o motivo aparece AQUI, com o formulário preenchido, para corrigir e reenviar;
+      //   falha ou sem rede  → os dados ficam na tela, com "tentar de novo" e o WhatsApp já com o nome escrito.
+      // O que o Motrik recusa ou não consegue gravar vira tarefa para a equipe lá dentro.
+      var BASE = LEAD_ENDPOINT.replace(/\/api\/registro$/, "");
       var campos = {
         nome: document.getElementById("lm-nome").value.trim(),
         cpf: cpf.value,
@@ -282,18 +282,88 @@
         etiqueta: etiquetaDe(LP),
         website: document.getElementById("lm-website").value,
       };
-      Object.keys(campos).forEach(function (k) {
-        var i = document.createElement("input");
-        i.type = "hidden";
-        i.name = k;
-        i.value = campos[k];
-        destino.appendChild(i);
-      });
-      document.body.appendChild(destino);
-      // Um instante para o aviso do Pixel sair antes de a página trocar.
-      setTimeout(function () {
+      function reativar() {
+        btn.disabled = false;
+        btn.textContent = "Continuar";
+      }
+      function aviso() {
+        var a = document.getElementById("lm-aviso");
+        if (!a) {
+          a = document.createElement("div");
+          a.id = "lm-aviso";
+          a.setAttribute("role", "alert");
+          a.style.cssText = "background:#fff5f4;border:1.5px solid #e5b4ae;color:#8f1d12;border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.45;margin:0 0 12px";
+          form.insertBefore(a, btn);
+        }
+        a.textContent = "";
+        return a;
+      }
+      function botaoDoAviso(a, texto, escuro, aoClicar, href) {
+        var b = document.createElement(href ? "a" : "button");
+        if (href) { b.href = href; b.target = "_blank"; b.rel = "noopener noreferrer"; } else b.type = "button";
+        b.textContent = texto;
+        b.style.cssText = "display:block;width:100%;margin-top:10px;padding:12px;border-radius:9px;font:inherit;font-size:15px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;border:1.5px solid #0F1313;" + (escuro ? "background:#0F1313;color:#fff" : "background:#fff;color:#0F1313");
+        if (aoClicar) b.onclick = aoClicar;
+        a.appendChild(b);
+      }
+      function mostrarRecusa(texto) {
+        var a = aviso();
+        a.appendChild(document.createTextNode(texto || "Confira os dados e tente de novo."));
+        a.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      // Caminho de reserva: envio comum do navegador (sem depender da resposta) — o Motrik cria a conta e leva adiante.
+      function enviarPorFormulario() {
+        var destino = document.createElement("form");
+        destino.method = "POST";
+        destino.action = LEAD_ENDPOINT;
+        destino.style.display = "none";
+        Object.keys(campos).forEach(function (k) {
+          var i = document.createElement("input");
+          i.type = "hidden";
+          i.name = k;
+          i.value = campos[k];
+          destino.appendChild(i);
+        });
+        document.body.appendChild(destino);
         destino.submit();
-      }, 450);
+      }
+      function mostrarFalha() {
+        var a = aviso();
+        a.appendChild(document.createTextNode("Não conseguimos concluir o seu cadastro agora. Seus dados continuam aqui — tente de novo ou chame a gente no WhatsApp."));
+        botaoDoAviso(a, "Tentar de novo", true, function () {
+          btn.disabled = true;
+          enviarPorFormulario();
+        });
+        botaoDoAviso(a, "Chamar no WhatsApp", false, null,
+          "https://wa.me/5508009991500?text=" + encodeURIComponent("Olá! Tentei fazer meu pré-cadastro pelo site e não consegui concluir. Meu nome é " + campos.nome + "."));
+        a.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      fetch(LEAD_ENDPOINT, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(campos),
+      })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (j) { return { status: r.status, j: j }; });
+        })
+        .then(function (res) {
+          if (res.status === 200 && res.j && res.j.ok) {
+            dispararConversao(eid);
+            // Um instante para o aviso do Pixel sair antes de a página trocar.
+            setTimeout(function () { location.href = BASE + "/cliente/cadastro"; }, 450);
+            return;
+          }
+          if (res.status === 409) { location.href = BASE + "/entrar?ja=1"; return; }
+          reativar();
+          if (res.status === 400) mostrarRecusa(res.j && res.j.erro);
+          else mostrarFalha();
+        })
+        .catch(function () {
+          reativar();
+          mostrarFalha();
+        });
     });
 
     function dispararConversao(eid) {
