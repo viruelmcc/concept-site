@@ -9,6 +9,21 @@
 
   var host = location.hostname;
   var _qs = new URLSearchParams(location.search);
+  // Fonte de tráfego: o que o navegador sabe no PRIMEIRO acesso desta visita — clique de anúncio (gclid/fbclid),
+  // parâmetros utm_* e de onde a pessoa veio. Fica na sessão porque ela pode navegar antes de abrir o formulário.
+  // Vai junto no cadastro e o Motrik classifica (Google patrocinado, Google orgânico, Meta, direto…).
+  var RASTREIO = (function () {
+    try { var salvo = sessionStorage.getItem("concept_rastreio"); if (salvo) return JSON.parse(salvo); } catch (e) {}
+    var r = {};
+    ["gclid", "gbraid", "wbraid", "fbclid", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach(function (k) {
+      var v = _qs.get(k);
+      if (v) r[k] = String(v).slice(0, 300);
+    });
+    if (document.referrer) r.referrer = String(document.referrer).slice(0, 300);
+    r.pagina = (location.hostname + location.pathname).slice(0, 300);
+    try { sessionStorage.setItem("concept_rastreio", JSON.stringify(r)); } catch (e) {}
+    return r;
+  })();
   var _origem =
     _qs.get("origem") ||
     (typeof window.CONCEPT_LEAD_LP === "string" ? window.CONCEPT_LEAD_LP : "");
@@ -280,6 +295,7 @@
         whatsapp: wh.value,
         email: document.getElementById("lm-email").value.trim(),
         etiqueta: etiquetaDe(LP),
+        rastreio: RASTREIO,
         website: document.getElementById("lm-website").value,
       };
       function reativar() {
