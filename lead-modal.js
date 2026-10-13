@@ -1,8 +1,11 @@
-/* Concept — modal de pré-cadastro nas LPs. Autossuficiente: injeta CSS + HTML e intercepta os botões
-   de "Quero alugar". Desde a virada do Pipefy (05/10/2026) ele pede só nome, CPF, WhatsApp e e-mail e entrega
-   o pré-cadastro direto no MOTRIK, que abre a tela de envio de CNH e comprovante. Classes prefixadas com lm-
-   pra não colidir com o CSS da LP. A conversão (Lead + evento por LP) dispara aqui, quando o Motrik confirma
-   que o cadastro foi criado. */
+/* Concept — modal de cadastro nas LPs. Autossuficiente: injeta CSS + HTML e intercepta os botões de
+   "Quero alugar". É a PRIMEIRA tela do cadastro (10/2026): começa pela CIDADE — a pessoa digita, escolhe na
+   sugestão e, só se a cidade for atendida, aparecem nome, CPF, e-mail e WhatsApp. Quem mora fora da área lê na
+   hora que não atendemos e não informa contato nenhum: nada é criado. Criada a conta, o MOTRIK abre a segunda
+   tela (endereço + comprovante de residência), que é quando a análise começa. Sem foto de CNH.
+   Classes prefixadas com lm- pra não colidir com o CSS da LP.
+   A conversão (Lead + evento por LP) dispara aqui, do MESMO jeito de sempre: quando o Motrik confirma que o
+   cadastro foi criado. Pixel, nomes de evento, dataLayer, etiqueta de origem e fonte de tráfego não mudaram. */
 (function () {
   if (window.__conceptLeadModal) return;
   window.__conceptLeadModal = true;
@@ -57,7 +60,17 @@
   }
   var LP = LP_PADRAO;
   var EVENTO = eventoDe(LP_PADRAO);
-  var LEAD_ENDPOINT = "https://cliente.locadoraconcept.com.br/api/registro";
+  // window.CONCEPT_LEAD_ENDPOINT existe só para a página de teste (aponta para o Motrik de homologação).
+  var LEAD_ENDPOINT = typeof window.CONCEPT_LEAD_ENDPOINT === "string" ? window.CONCEPT_LEAD_ENDPOINT : "https://cliente.locadoraconcept.com.br/api/registro";
+  var REGIAO = "Curitiba e região";
+  // O "disquinho" de carregando: anel do conjunto SVG Spinners (Utkarsh Verma, licença MIT) — animação do próprio SVG.
+  var DISCO =
+    '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor"><circle cx="12" cy="12" r="9.5" fill="none" stroke-linecap="round" stroke-width="3">' +
+    '<animate attributeName="stroke-dasharray" calcMode="spline" dur="1.5s" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" keyTimes="0;0.475;0.95;1" repeatCount="indefinite" values="0 150;42 150;42 150;42 150"/>' +
+    '<animate attributeName="stroke-dashoffset" calcMode="spline" dur="1.5s" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" keyTimes="0;0.475;0.95;1" repeatCount="indefinite" values="0;-16;-59;-59"/>' +
+    '</circle><animateTransform attributeName="transform" dur="2s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></g></svg>';
+  // O logo para fundo escuro vem do Motrik (o mesmo da tela de entrada do cliente).
+  var LOGO = LEAD_ENDPOINT.replace(/\/api\/registro$/, "") + "/api/marca/concept/logo-escuro";
   // Etiqueta de origem que vai para o cadastro no Motrik — os mesmos rótulos que o Pipefy usava.
   var ETIQUETAS = {
     "site-oficial": "SITE OFICIAL",
@@ -109,25 +122,102 @@
     ".lm-suc .lm-ic{width:64px;height:64px;border-radius:50%;background:#16a34a;color:#fff;font-size:36px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}" +
     ".lm-suc h2{font-family:'Anton','Inter',sans-serif;text-transform:uppercase;color:#0F1313;font-size:26px;margin:0 0 8px}" +
     ".lm-suc p{color:#6b7173;font-size:15px;margin:0}" +
-    ".lm-inline{background:#fff;width:100%;max-width:540px;margin:0 auto;border-radius:16px;padding:26px 26px 30px;color:#16191a;line-height:1.55;box-shadow:0 20px 60px rgba(0,0,0,.28)}" +
+    // Não depende do CSS da página que hospeda o modal (alinhamento e largura dos campos).
+    ".lm-modal,.lm-inline{text-align:left}.lm-modal *,.lm-inline *{box-sizing:border-box}" +
+    ".lm-eyebrow{display:block}" +
+    // O que está escondido fica escondido mesmo quando a classe define display (flex/grid).
+    ".lm-modal [hidden],.lm-inline [hidden]{display:none!important}" +
+    ".lm-fld input::placeholder{color:#b9bfc4;opacity:1}" +
+    ".lm-passos{list-style:none;margin:0 0 20px;padding:0;display:flex;align-items:center;gap:10px;font-size:12px;color:#a3a9ad}" +
+    ".lm-passos li{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}" +
+    ".lm-passos li+li::before{content:'';width:18px;height:1px;background:#d7dadd;margin-right:4px}" +
+    ".lm-passos b{width:16px;height:16px;border-radius:50%;display:inline-grid;place-items:center;font-size:10px;font-weight:600;background:#eef0f1;color:#8a9094}" +
+    ".lm-passos li.lm-atual{color:#16191a}.lm-passos li.lm-atual b{background:#0F1313;color:#fff}" +
+    ".lm-q{display:block;font-size:17px;font-weight:700;color:#0F1313;margin:0 0 2px}" +
+    ".lm-qs{font-size:13.5px;color:#6b7173;margin:0 0 10px}" +
+    ".lm-lista{list-style:none;margin:8px 0 0;padding:0;border:1.5px solid #d7dadd;border-radius:9px;overflow:hidden}" +
+    ".lm-lista li+li{border-top:1px solid #e6e8ea}" +
+    ".lm-item{width:100%;min-height:52px;padding:9px 13px;display:flex;flex-direction:column;justify-content:center;gap:1px;text-align:left;background:#fff;border:0;font:inherit;cursor:pointer}" +
+    ".lm-item:hover,.lm-item:active{background:#f7f8f8}" +
+    ".lm-item.lm-linha{flex-direction:row;align-items:center;justify-content:space-between;gap:12px}" +
+    ".lm-rua{font-size:15px;font-weight:600;color:#16191a;line-height:1.3}.lm-onde{font-size:13px;color:#6b7173;line-height:1.3}" +
+    ".lm-dica{font-size:13.5px;color:#6b7173;margin-top:8px}" +
+    ".lm-link{margin-top:10px;padding:8px 0;background:none;border:0;font:inherit;font-size:13.5px;font-weight:600;color:#6b7173;text-decoration:underline;cursor:pointer}" +
+    ".lm-esc{display:flex;align-items:center;gap:12px;border:1.5px solid #86c79b;border-radius:10px;padding:11px 13px;margin-bottom:16px}" +
+    ".lm-esc.lm-fora{border-color:#d7dadd}" +
+    ".lm-esc-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}" +
+    ".lm-trocar{flex:none;padding:9px 13px;border:1.5px solid #d7dadd;border-radius:9px;background:#fff;font:inherit;font-size:13.5px;font-weight:600;color:#16191a;cursor:pointer}" +
+    ".lm-foramsg{background:#fff8ec;border:1.5px solid #f1d08f;color:#7a4b06;border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.45;margin-bottom:8px}" +
+    ".lm-foramsg b{display:block;font-size:15px}" +
+    ".lm-dois{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px}" +
+    ".lm-dois2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}" +
+    // ── TEMA ESCURO (10/2026): o mesmo visual da tela de cadastro do cliente no Motrik ──
+    ".lm-modal,.lm-inline{background:#0F1313 radial-gradient(70% 38% at 50% 112%,rgba(183,1,3,.42) 0%,transparent 70%) no-repeat;color:#fff;border:1px solid rgba(255,255,255,.08)}" +
+    ".lm-modal{max-width:460px;padding:34px 30px 30px}" +
+    ".lm-x{background:rgba(255,255,255,.10);color:#fff}" +
+    ".lm-topo{display:flex;justify-content:center;padding-bottom:24px;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,.10)}" +
+    ".lm-logo{height:52px;width:auto;display:block}" +
+    ".lm-title{font-family:'Inter',system-ui,sans-serif;font-size:26px;font-weight:700;letter-spacing:-.02em;text-transform:none;text-align:center;color:#fff;margin:0}" +
+    ".lm-intro{text-align:center;font-size:15px;color:rgba(255,255,255,.55);margin:8px 0 26px}" +
+    ".lm-passos{justify-content:center;color:rgba(255,255,255,.38);margin-bottom:28px}" +
+    ".lm-passos li+li::before{background:rgba(255,255,255,.16)}" +
+    ".lm-passos b{background:rgba(255,255,255,.10);color:rgba(255,255,255,.55)}" +
+    ".lm-passos li.lm-atual{color:rgba(255,255,255,.9)}.lm-passos li.lm-atual b{background:#fff;color:#0F1313}" +
+    ".lm-q{color:#fff}.lm-qs{color:rgba(255,255,255,.62);margin-bottom:14px}" +
+    ".lm-fld label.lm-lab{color:rgba(255,255,255,.72);font-size:13.5px}" +
+    ".lm-fld input[type=text],.lm-fld input[type=email],.lm-fld input[type=tel]{height:52px;padding:0 16px;font-size:16px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.06);color:#fff}" +
+    ".lm-fld input:focus{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.08)}" +
+    ".lm-fld input::placeholder{color:rgba(255,255,255,.30)}" +
+    ".lm-fld input.lm-bad{border-color:rgba(239,68,68,.7);background:rgba(239,68,68,.08)}" +
+    ".lm-erro{color:#FCA5A5}" +
+    ".lm-lista{border:1px solid rgba(255,255,255,.12);border-radius:12px}.lm-lista li+li{border-top:1px solid rgba(255,255,255,.10)}" +
+    ".lm-item{background:transparent}.lm-item:hover,.lm-item:active{background:rgba(255,255,255,.08)}" +
+    ".lm-rua{color:#fff}.lm-onde,.lm-dica,.lm-link{color:rgba(255,255,255,.62)}" +
+    ".lm-esc{border:1px solid rgba(34,197,94,.45);border-radius:12px}.lm-esc.lm-fora{border-color:rgba(255,255,255,.12)}" +
+    ".lm-trocar{background:transparent;border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:10px}" +
+    ".lm-foramsg{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.30);color:#FCD34D;border-radius:12px}" +
+    ".lm-enviar{border-radius:12px;height:52px;padding:0;font-size:16px}" +
+    ".lm-nota{color:rgba(255,255,255,.38)}" +
+    ".lm-comdisco{position:relative;display:block}.lm-disco{position:absolute;right:14px;top:50%;transform:translateY(-50%);display:inline-flex;color:rgba(255,255,255,.7);pointer-events:none}" +
+    ".lm-ja{display:flex;flex-direction:column;gap:10px;margin:-6px 0 16px;padding:12px 14px;border-radius:12px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.30);font-size:14px;line-height:1.45;color:#FCD34D}" +
+    ".lm-ja-b{display:flex;align-items:center;justify-content:center;height:44px;border-radius:10px;background:#fff;color:#0F1313;font-weight:600;font-size:14.5px;text-decoration:none}" +
+    ".lm-enviar svg{vertical-align:middle;margin-right:8px}" +
+    ".lm-inline{width:100%;max-width:460px;margin:0 auto;border-radius:16px;padding:34px 30px 30px;line-height:1.55;box-shadow:0 20px 60px rgba(0,0,0,.28)}" +
     "@media(max-width:560px){.lm-ov{padding:0}.lm-modal{max-width:100%;min-height:100%;border-radius:0;padding-top:20px}.lm-inline{border-radius:14px;padding:22px 18px 26px}}";
 
   var INNER =
     '<div id="lm-passo-form">' +
-    '<span class="lm-eyebrow">Pré-cadastro · Concept</span>' +
-    '<h2 class="lm-title" id="lm-t">Pré Cadastro</h2>' +
-    '<p class="lm-intro">Preencha seus dados. No próximo passo você envia a CNH e o comprovante de residência e acompanha a análise.</p>' +
-    '<form id="lm-form" novalidate>' +
-    fld("nome", "Digite seu Nome Completo", '<input type="text" id="lm-nome" autocomplete="name" placeholder="Seu nome completo">', "Informe seu nome completo.") +
-    fld("cpf", "CPF", '<input type="text" id="lm-cpf" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">', "Informe um CPF válido.") +
-    fld("whats", "Número de WhatsApp", '<input type="tel" id="lm-whats" inputmode="numeric" placeholder="(99) 99999-9999" maxlength="16">', "Informe um WhatsApp válido com DDD.") +
-    fld("email", "Email", '<input type="email" id="lm-email" autocomplete="email" placeholder="voce@email.com">', "Informe um e-mail válido.") +
+    '<div class="lm-topo"><img class="lm-logo" src="' + LOGO + '" alt="Locadora Concept" width="190" height="52"></div>' +
+    '<h2 class="lm-title" id="lm-t">Alugue seu carro</h2>' +
+    '<p class="lm-intro">Cadastro em 1 minuto, sem burocracia.</p>' +
+    '<ol class="lm-passos" aria-label="Como funciona"><li class="lm-atual"><b>1</b>Seus dados</li><li><b>2</b>Endereço</li><li><b>3</b>Análise</li></ol>' +
+    // Sem preenchimento automático do navegador em nenhum campo: ele troca dado certo por dado guardado.
+    '<form id="lm-form" novalidate autocomplete="off">' +
+    // ── A cidade vem primeiro, sozinha ──
+    '<div id="lm-busca" class="lm-fld">' +
+    '<label class="lm-q" for="lm-cid">Em que cidade você mora?</label>' +
+    '<p class="lm-qs">Atendemos ' + REGIAO + '.</p>' +
+    '<span class="lm-comdisco"><input type="text" id="lm-cid" name="search" autocomplete="off" data-1p-ignore data-lpignore="true" autocapitalize="words" enterkeyhint="search" placeholder="Digite o nome da cidade">' +
+    '<span class="lm-disco" id="lm-disco-cid" hidden>' + DISCO + "</span></span>" +
+    '<ul class="lm-lista" id="lm-lista" hidden></ul>' +
+    '<div class="lm-dica" id="lm-dica" hidden></div>' +
+    "</div>" +
+    '<div id="lm-esc" class="lm-esc" hidden><span class="lm-esc-tx"><span class="lm-rua" id="lm-esc-rua"></span><span class="lm-onde" id="lm-esc-onde"></span></span>' +
+    '<button type="button" class="lm-trocar" id="lm-trocar">Trocar</button></div>' +
+    '<div id="lm-foramsg" class="lm-foramsg" hidden><b id="lm-fora-t"></b>Por enquanto atendemos só ' + REGIAO + ".</div>" +
+    // ── Os dados: só aparecem com a cidade atendida ──
+    '<div id="lm-dados" hidden>' +
+    fld("nome", "Nome completo", '<input type="text" id="lm-nome" name="search" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="Como está na sua CNH">', "Informe seu nome completo.") +
+    fld("cpf", "CPF", '<span class="lm-comdisco"><input type="text" id="lm-cpf" name="search" autocomplete="off" data-1p-ignore data-lpignore="true" inputmode="numeric" placeholder="Seu CPF" maxlength="14"><span class="lm-disco" id="lm-disco-cpf" hidden>' + DISCO + "</span></span>", "Informe um CPF válido.") +
+    '<div id="lm-ja" class="lm-ja" hidden>Esse CPF já tem cadastro com a gente.<a id="lm-ja-b" class="lm-ja-b" href="#">Entrar na minha conta →</a></div>' +
+    fld("email", "E-mail", '<input type="email" id="lm-email" name="search" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="Seu e-mail">', "Informe um e-mail válido.") +
+    fld("whats", "WhatsApp", '<input type="tel" id="lm-whats" name="search" autocomplete="off" data-1p-ignore data-lpignore="true" inputmode="numeric" placeholder="DDD e número" maxlength="16">', "Informe um WhatsApp válido com DDD.") +
     '<input type="hidden" id="lm-gclid"><input type="hidden" id="lm-fbclid"><input type="hidden" id="lm-event_id">' +
     '<input type="text" id="lm-website" name="website" tabindex="-1" readonly autocomplete="off" aria-hidden="true" data-lpignore="true" data-1p-ignore data-form-type="other" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">' +
     '<button type="submit" class="lm-enviar" id="lm-btn">Continuar</button>' +
+    "</div>" +
     '<p class="lm-nota">Nunca envie senhas ou dados confidenciais. Formulário oficial da Locadora Concept (CNPJ 35.015.925/0001-90).</p>' +
-    "</form></div>" +
-    '<div id="lm-passo-suc" class="lm-suc" hidden><div class="lm-ic">&check;</div><h2>Pré-cadastro enviado!</h2><p>Recebemos seus dados. Entraremos em contato em até 24h úteis pelo WhatsApp ou e-mail. 🚗</p></div>';
+    "</form></div>";
 
   // Modal (LPs): overlay + botão fechar em volta do INNER.
   var HTML_MODAL =
@@ -136,6 +226,9 @@
     INNER +
     "</div></div>";
 
+  function fldOpc(key, label, input) {
+    return '<div class="lm-fld" data-fld="' + key + '"><label class="lm-lab">' + label + "</label>" + input + "</div>";
+  }
   function fld(key, label, input, erro) {
     return (
       '<div class="lm-fld" data-fld="' + key + '"><label class="lm-lab">' + label +
@@ -218,12 +311,90 @@
     // ou qualquer link com ?cadastro=1. O LP já é o LP_PADRAO da página (ex.: "whatsapp").
     if (window.CONCEPT_LEAD_OPEN || _qs.get("cadastro") === "1") abrir();
 
+    // ── CIDADE ────────────────────────────────────────────────────────────────
+    // `cid` = a cidade escolhida na sugestão ({ cidade, estado, atendida }).
+    var $ = function (id) { return document.getElementById(id); };
+    var cid = null, pedido = 0, timer = null;
+    var URL_CIDADES = LEAD_ENDPOINT.replace(/\/+$/, "") + "/enderecos?tipo=cidade&q=";
+
+    // Uma função só decide o que aparece: a pergunta · a cidade escolhida · o aviso de fora da área · os dados.
+    function pintar() {
+      var fora = !!cid && !cid.atendida;
+      $("lm-busca").hidden = !!cid;
+      $("lm-esc").hidden = !cid;
+      $("lm-foramsg").hidden = !fora;
+      $("lm-dados").hidden = !cid || fora;
+      $("lm-esc").className = "lm-esc" + (fora ? " lm-fora" : "");
+      if (cid) { $("lm-esc-rua").textContent = cid.cidade + (cid.estado ? " · " + cid.estado : ""); $("lm-esc-onde").textContent = ""; }
+      if (fora) $("lm-fora-t").textContent = "Ainda não atendemos " + cid.cidade + ".";
+    }
+    function mostrarCidades(itens, buscou) {
+      var ul = $("lm-lista");
+      ul.textContent = "";
+      itens.forEach(function (it) {
+        var li = document.createElement("li"), b = document.createElement("button"), r = document.createElement("span"), o = document.createElement("span");
+        // Cidade à esquerda, estado à direita, na mesma linha.
+        b.type = "button"; b.className = "lm-item lm-linha"; r.className = "lm-rua"; o.className = "lm-onde";
+        r.textContent = it.cidade; o.textContent = it.estado || "";
+        b.appendChild(r); b.appendChild(o);
+        b.onclick = function () { escolher(it); };
+        li.appendChild(b); ul.appendChild(li);
+      });
+      ul.hidden = itens.length === 0;
+      $("lm-dica").hidden = !(buscou && itens.length === 0);
+      $("lm-dica").textContent = "Não achamos essa cidade. Confira como está escrito.";
+    }
+    function buscarCidades() {
+      var termo = $("lm-cid").value.trim();
+      clearTimeout(timer);
+      if (termo.length < 2) { pedido++; $("lm-disco-cid").hidden = true; mostrarCidades([], false); return; }
+      var meu = ++pedido;
+      $("lm-disco-cid").hidden = false;
+      // Espera a pausa de 250 ms e ignora resposta atrasada (a pessoa continuou digitando).
+      timer = setTimeout(function () {
+        fetch(URL_CIDADES + encodeURIComponent(termo))
+          .then(function (r) { return r.json(); })
+          .then(function (j) { if (meu === pedido) { $("lm-disco-cid").hidden = true; mostrarCidades((j && j.itens) || [], true); } })
+          .catch(function () { if (meu === pedido) { $("lm-disco-cid").hidden = true; mostrarCidades([], true); } });
+      }, 250);
+    }
+    function escolher(it) {
+      cid = { cidade: it.cidade, estado: it.estado || "", atendida: it.atendida !== false };
+      pintar();
+      if (cid.atendida) setTimeout(function () { $("lm-nome").focus(); }, 60);
+    }
+    $("lm-cid").oninput = buscarCidades;
+    $("lm-trocar").onclick = function () { cid = null; $("lm-cid").value = ""; mostrarCidades([], false); pintar(); $("lm-cid").focus(); };
+    pintar();
+
     var cpf = document.getElementById("lm-cpf");
     cpf.oninput = function () {
       var v = cpf.value.replace(/\D/g, "").slice(0, 11);
       v = v.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
       cpf.value = v;
+      conferirCpf();
     };
+    // O CPF já tem cadastro? Confere assim que os 11 dígitos são válidos e oferece a entrada na hora — em vez de a
+    // pessoa preencher tudo e descobrir no envio. O Motrik limita as tentativas por IP (a mesma trava do envio).
+    var cpfJa = false, pedidoCpf = 0, timerCpf = null;
+    function pintarCpfJa() {
+      $("lm-ja").hidden = !cpfJa;
+      $("lm-btn").disabled = cpfJa;
+      $("lm-ja-b").href = LEAD_ENDPOINT.replace(/\/api\/registro$/, "") + "/entrar?ja=1";
+    }
+    function conferirCpf() {
+      clearTimeout(timerCpf);
+      var meu = ++pedidoCpf;
+      cpfJa = false; pintarCpfJa();
+      if (!validaCPF(cpf.value)) { $("lm-disco-cpf").hidden = true; return; }
+      $("lm-disco-cpf").hidden = false;
+      timerCpf = setTimeout(function () {
+        fetch(LEAD_ENDPOINT.replace(/\/+$/, "") + "/cpf", { method: "POST", credentials: "omit", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cpf: cpf.value }) })
+          .then(function (r) { return r.json(); })
+          .then(function (j) { if (meu === pedidoCpf) { $("lm-disco-cpf").hidden = true; cpfJa = !!(j && j.existe); pintarCpfJa(); } })
+          .catch(function () { if (meu === pedidoCpf) $("lm-disco-cpf").hidden = true; });
+      }, 300);
+    }
     var wh = document.getElementById("lm-whats");
     wh.oninput = function () {
       var v = wh.value.replace(/\D/g, "").slice(0, 11);
@@ -270,6 +441,8 @@
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      // Sem cidade atendida não há o que enviar (os campos nem aparecem).
+      if (!cid || !cid.atendida || cpfJa) return;
       if (!valida()) {
         var p = form.querySelector(".lm-invalid");
         if (p) p.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -277,19 +450,22 @@
       }
       var btn = document.getElementById("lm-btn");
       btn.disabled = true;
-      btn.textContent = "Enviando…";
+      btn.innerHTML = DISCO + "Enviando…";
       var eid = uuid();
       document.getElementById("lm-event_id").value = eid;
 
       // ── O PRÉ-CADASTRO VAI DIRETO PARA O MOTRIK (05/10/2026) ──
       // O envio é feito daqui e a resposta decide o que a pessoa vê — é o que evita perder lead por erro:
-      //   criou a conta      → dispara a conversão (só agora, com o cadastro confirmado) e abre o envio de documentos;
+      //   criou a conta      → dispara a conversão (só agora, com o cadastro confirmado) e abre a segunda tela (endereço + comprovante);
+      //   fora da área       → o aviso aparece no endereço; nada foi criado e NÃO conta como conversão;
       //   já tem cadastro    → abre a tela de entrada, que explica; não conta como conversão;
       //   dado recusado      → o motivo aparece AQUI, com o formulário preenchido, para corrigir e reenviar;
       //   falha ou sem rede  → os dados ficam na tela, com "tentar de novo" e o WhatsApp já com o nome escrito.
       // O que o Motrik recusa ou não consegue gravar vira tarefa para a equipe lá dentro.
       var BASE = LEAD_ENDPOINT.replace(/\/api\/registro$/, "");
       var campos = {
+        cidade: cid.cidade,
+        estado: cid.estado,
         nome: document.getElementById("lm-nome").value.trim(),
         cpf: cpf.value,
         whatsapp: wh.value,
@@ -308,8 +484,8 @@
           a = document.createElement("div");
           a.id = "lm-aviso";
           a.setAttribute("role", "alert");
-          a.style.cssText = "background:#fff5f4;border:1.5px solid #e5b4ae;color:#8f1d12;border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.45;margin:0 0 12px";
-          form.insertBefore(a, btn);
+          a.style.cssText = "background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.28);color:#FCA5A5;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.45;margin:0 0 12px";
+          btn.parentNode.insertBefore(a, btn);
         }
         a.textContent = "";
         return a;
@@ -318,7 +494,7 @@
         var b = document.createElement(href ? "a" : "button");
         if (href) { b.href = href; b.target = "_blank"; b.rel = "noopener noreferrer"; } else b.type = "button";
         b.textContent = texto;
-        b.style.cssText = "display:block;width:100%;margin-top:10px;padding:12px;border-radius:9px;font:inherit;font-size:15px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;border:1.5px solid #0F1313;" + (escuro ? "background:#0F1313;color:#fff" : "background:#fff;color:#0F1313");
+        b.style.cssText = "display:block;width:100%;margin-top:10px;padding:12px;border-radius:9px;font:inherit;font-size:15px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;border:1px solid rgba(255,255,255,.22);" + (escuro ? "background:#fff;color:#0F1313" : "background:transparent;color:#fff");
         if (aoClicar) b.onclick = aoClicar;
         a.appendChild(b);
       }
@@ -351,7 +527,7 @@
           enviarPorFormulario();
         });
         botaoDoAviso(a, "Chamar no WhatsApp", false, null,
-          "https://wa.me/5508009991500?text=" + encodeURIComponent("Olá! Tentei fazer meu pré-cadastro pelo site e não consegui concluir. Meu nome é " + campos.nome + "."));
+          "https://wa.me/5508009991500?text=" + encodeURIComponent("Olá! Tentei fazer meu cadastro pelo site e não consegui concluir. Meu nome é " + campos.nome + "."));
         a.scrollIntoView({ behavior: "smooth", block: "center" });
       }
 
@@ -368,11 +544,14 @@
           if (res.status === 200 && res.j && res.j.ok) {
             dispararConversao(eid);
             // Um instante para o aviso do Pixel sair antes de a página trocar.
+            // Um instante para o aviso do Pixel sair antes de a página trocar.
             setTimeout(function () { location.href = BASE + "/cliente/cadastro"; }, 450);
             return;
           }
           if (res.status === 409) { location.href = BASE + "/entrar?ja=1"; return; }
           reativar();
+          // O servidor confere a cidade de novo: recusou → marca como fora da área (somem os campos).
+          if (res.status === 400 && res.j && res.j.foraDaArea) { cid.atendida = false; pintar(); return; }
           if (res.status === 400) mostrarRecusa(res.j && res.j.erro);
           else mostrarFalha();
         })
